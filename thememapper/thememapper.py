@@ -2,8 +2,7 @@ from flask import Flask,url_for,redirect,request
 from flask import render_template,Response
 from flask import abort
 from werkzeug.routing import BaseConverter
-import optparse
-import os
+import optparse, os, config
 
 class RegexConverter(BaseConverter):
     def __init__(self, url_map, *items):
@@ -17,14 +16,17 @@ app.url_map.converters['regex'] = RegexConverter
 
 def main():
     global content_url,theme_path,rules_path,paste_config_path,port
+
+    # Adds the ability to set config file and port through commandline
     p = optparse.OptionParser()
-    p.add_option('--config', '-c', default="/home/c4rocket/Documents/Projects/diazo-test/proxy.ini")
+    p.add_option('--config', '-c', default=config.paste_config_path)
     p.add_option('--port', '-p', default=5001)
     options, arguments = p.parse_args()
     if options.config is not None:
         paste_config_path = options.config
     if options.port is not None:
         port = options.port
+    # Read the Diazo paste config and set global variables
     from ConfigParser import SafeConfigParser
     parser = SafeConfigParser()
     parser.read(paste_config_path)
@@ -35,7 +37,8 @@ def main():
     run()
 
 def run():
-    app.run('0.0.0.0', port)
+    # Start the server
+    app.run('0.0.0.0', int(port))
 
 @app.route("/")
 def index():
@@ -76,9 +79,11 @@ def editor(name=None):
 def iframe(name=None,filename='index.html'):
     if name is not None:
         if name == 'theme':
+            # Only local themes are supported right now.
             import mimetypes
             mimetypes.init()
             path = theme_path + '/' + filename
+            # Check the file exists; if so, open it, return it with the correct mimetype.
             if os.path.isfile(path):
                 return Response(file(path), direct_passthrough=True,mimetype=mimetypes.types_map[os.path.splitext(path)[1]])
             else:
