@@ -15,11 +15,11 @@ Now edit the "paste_config_path" variable found in /thememapper/config.py::
 
 Navigate to root of ThemeMapper and execute the following command to start it.
 
-    $ thememapper/thememapper.py
+    $ python thememapper/thememapper.py
 
 Alternatively you can start the server by calling
 
-    $ thememapper/thememapper.py --port 5001 --config "/path/to/paste/config.ini"
+    $ python thememapper/thememapper.py --port 5001 --config "/path/to/paste/config.ini"
 
 Install and configure ThemeMapper
 =====
