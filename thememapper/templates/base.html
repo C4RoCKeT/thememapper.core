@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>{% block page_title %}{% endblock %}</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="/static/favicon.ico" />
+        <link rel="stylesheet" href="/static/style/style.css" type="text/css" />
+        {% block css %}{% endblock %}
+    </head>
+    <body class="{% block body_class %}{% endblock %}">
+        <div id="mask" class="mask">
+            <div id="mask_content" class="mask">
+                {% block mask_content %}{% endblock %}
+            </div>
+        </div>
+        <div id="content">
+            {% block navigation %}
+            {% endblock navigation %}
+            {% block body %}
+            <!--[if lt IE 7]>
+                <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+            <![endif]-->
+            {% block content %}
+            {% endblock content %}
+            {% block javascript %}
+            {% endblock javascript %}
+            {% endblock body %}
+        </div>
+    </body>
+</html>

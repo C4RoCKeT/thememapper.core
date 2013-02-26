@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block navigation%}
+{% include "nav.html" %}
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/static/js/codemirror/lib/codemirror.css" />
+{% endblock %}
+{% block javascript %}
+<script src="/static/js/codemirror/lib/codemirror.js"></script>
+<script src="/static/js/codemirror/mode/xml/xml.js"></script>
+<script>
+    $(function (){
+        var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("proxy"), {
+            mode:  "xml",
+            lineNumbers: true,
+            alignCDATA: true
+        });
+    });
+</script>
+{% endblock %}
+{% block content %}
+<form action="" method="post">
+    <div style="border:1px solid #ccc;">
+        <textarea id="proxy" name="paste_config" style="width:100%;height:500px;">{{ paste_config }}</textarea>
+    </div>
+    <input style="float:right;" type="submit" value="Save proxy.ini" />
+    <div class="cf"></div>
+</form>
+{% endblock %}

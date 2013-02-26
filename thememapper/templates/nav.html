@@ -1,0 +1,15 @@
+<div id="navigation">
+    <ul>
+        <li style="float:left;"><a href="/editor/config">Proxy Editor</a></li>
+        <li style="float:left;"><a href="/editor">Theme Editor</a></li>
+        <li class="theme-mapper-generate">Generate rule</li>
+        <li>
+            {% if not is_logged_in %}
+            <a href="/login/">Login</a>
+            {% else %}
+            <a href="/logout/">Logout</a>
+            {% endif %}
+        </li>
+        <div class="cf"></div>
+    </ul>
+</div>
