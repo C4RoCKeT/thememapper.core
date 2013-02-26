@@ -3,6 +3,8 @@ ThemeMapper for Diazo
 
 This is a theme editor for Diazo. This theme editor differs from the one found in Plone; it is a stand-alone theme editor. It does require Diazo of course!
 
+It is still a work in progress. No file browser, no support for external webpages / themes. If something works; awesome. If it doesn't; to bad.
+
 Quickstart
 =====
 
@@ -20,6 +22,26 @@ Navigate to root of ThemeMapper and execute the following command to start it.
 Alternatively you can start the server by calling
 
     $ python thememapper/thememapper.py --port 5001 --config "/path/to/paste/config.ini"
+
+ThemeMapper will read your paste config and use the values found in there.
+It will use:: 
+
+    [filter:theme]
+    rules = /path/to/themes/directory/basic/rules.xml
+
+    [app:content]
+    address = http://localhost/
+
+The rules path will be used for the rules.xml, but it will be also used for the theme directory (strips rules.xml).
+The address will be the content url. You could use an external address here, but I don't give a guarantee it will work.
+
+Theme requirements
+=====
+
+There aren't many requirements, technically just one. Namely: your rules.xml for that specific theme should be in the root of the theme directory.
+So for example your theme is named "basic". The location of your rules.xml file would be:
+
+    "/path/to/themes/directory/basic/rules.xml"
 
 Install and configure ThemeMapper
 =====
