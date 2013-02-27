@@ -2,7 +2,9 @@ from flask import Flask,url_for,redirect,request
 from flask import render_template,Response
 from flask import abort
 from werkzeug.routing import BaseConverter
-import optparse, os, config
+import optparse
+import os
+import config
 
 class RegexConverter(BaseConverter):
     def __init__(self, url_map, *items):
@@ -15,17 +17,19 @@ app.debug = True
 app.url_map.converters['regex'] = RegexConverter
 
 def main():
-    global content_url,theme_path,rules_path,paste_config_path,port
+    global content_url,theme_path,rules_path,paste_config_path
 
     # Adds the ability to set config file and port through commandline
     p = optparse.OptionParser()
     p.add_option('--config', '-c', default=config.paste_config_path)
     p.add_option('--port', '-p', default=5001)
     options, arguments = p.parse_args()
-    if options.config is not None:
-        paste_config_path = options.config
-    if options.port is not None:
-        port = options.port
+    paste_config_path = options.config
+    port = options.port
+
+    #reload if these files change
+    extra_files = [paste_config_path]
+    
     # Read the Diazo paste config and set global variables
     from ConfigParser import SafeConfigParser
     parser = SafeConfigParser()
@@ -34,15 +38,25 @@ def main():
     rules_path = parser.get('filter:theme','rules')
     theme_path = os.path.dirname(rules_path)
     parser.write(open(paste_config_path, 'w'))
-    run()
+    run(port,extra_files)
 
-def run():
+def run(port,extra_files):
     # Start the server
-    app.run('0.0.0.0', int(port))
+    app.run('0.0.0.0', int(port),extra_files=extra_files)
 
 @app.route("/")
 def index():
     return render_template('index.html')
+
+@app.route("/editor/theme/files")
+def files():
+    rootDir = theme_path
+    for dirName, subdirList, fileList in os.walk(rootDir):
+        print('Found directory: %s' % dirName)
+        for fname in fileList:
+            if fname[-1:] != '~':
+                print('\t%s' % fname)
+    abort(404)
 
 @app.route("/editor/", methods=["GET", "POST"])
 @app.route("/editor/<name>/", methods=["GET", "POST"])
