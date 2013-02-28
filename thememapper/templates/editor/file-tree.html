@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block navigation%}
+{% include "nav.html" %}
+{% endblock %}
+{% block content %}
+<ul>
+    {% for dir,files in tree.items() %}
+    <li>{{ dir }}</li>
+    {% if files %}
+    <li style="list-style:none;">
+        <ul>
+            {% for file in files %}
+            <li>{{ file }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endblock %}

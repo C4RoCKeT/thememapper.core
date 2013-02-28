@@ -17,13 +17,13 @@ app.debug = True
 app.url_map.converters['regex'] = RegexConverter
 
 def main():
-    global content_url,theme_path,rules_path,paste_config_path
+    global content_url,theme_path,rules_path,paste_config_path,themed_url
 
     # Adds the ability to set config file and port through commandline
     p = optparse.OptionParser()
     p.add_option('--config', '-c', default=config.paste_config_path)
     p.add_option('--port', '-p', default=5001)
-    options, arguments = p.parse_args()
+    options = p.parse_args()[0]
     paste_config_path = options.config
     port = options.port
 
@@ -36,6 +36,7 @@ def main():
     parser.read(paste_config_path)
     content_url = parser.get('app:content','address')
     rules_path = parser.get('filter:theme','rules')
+    themed_url = parser.get('server:main','host') + ':' + parser.get('server:main','port')
     theme_path = os.path.dirname(rules_path)
     parser.write(open(paste_config_path, 'w'))
     run(port,extra_files)
@@ -48,14 +49,22 @@ def run(port,extra_files):
 def index():
     return render_template('index.html')
 
-@app.route("/editor/theme/files")
+@app.route("/editor/theme/files/")
 def files():
+    tree = {}
     rootDir = theme_path
     for dirName, subdirList, fileList in os.walk(rootDir):
-        print('Found directory: %s' % dirName)
+        found_files = []
+        print subdirList
+        if subdirList:
+            for subdir in subdirList:
+                found_files.append({'name':subdir,'type':folder})
         for fname in fileList:
             if fname[-1:] != '~':
-                print('\t%s' % fname)
+                found_files.append(fname)
+        tree[dirName] = found_files
+    if tree:
+        return render_template('editor/file-tree.html',tree=tree)
     abort(404)
 
 @app.route("/editor/", methods=["GET", "POST"])
@@ -72,7 +81,7 @@ def editor(name=None):
             except IOError:
                 pass
         rules_xml = open(rules_path).read()
-        return render_template('editor/index.html',theme_path=theme_path,content_url=content_url,rules_xml=rules_xml)
+        return render_template('editor/index.html',theme_path=theme_path,content_url=content_url,rules_xml=rules_xml,themed_url=themed_url)
     elif name == 'config':
         if request.method == 'POST':
             paste_config = request.form['paste_config']
