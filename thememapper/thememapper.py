@@ -1,10 +1,12 @@
-from flask import Flask,url_for,redirect,request
+from flask import Flask,request
 from flask import render_template,Response
 from flask import abort
 from werkzeug.routing import BaseConverter
 import optparse
 import os
 import config
+from navigation import Navigation
+from editor import Editor
 
 class RegexConverter(BaseConverter):
     def __init__(self, url_map, *items):
@@ -17,7 +19,12 @@ app.debug = True
 app.url_map.converters['regex'] = RegexConverter
 
 def main():
-    global content_url,theme_path,rules_path,paste_config_path,themed_url
+    global content_url
+    global theme_path
+    global paste_config_path
+    global themed_url
+    global nav
+    global editor
 
     # Adds the ability to set config file and port through commandline
     p = optparse.OptionParser()
@@ -36,9 +43,13 @@ def main():
     parser.read(paste_config_path)
     content_url = parser.get('app:content','address')
     rules_path = parser.get('filter:theme','rules')
-    themed_url = parser.get('server:main','host') + ':' + parser.get('server:main','port')
+    themed_url = 'http://' + parser.get('server:main','host') + ':' + parser.get('server:main','port')
     theme_path = os.path.dirname(rules_path)
     parser.write(open(paste_config_path, 'w'))
+
+    nav = Navigation()
+    editor = Editor(rules_path)
+
     run(port,extra_files)
 
 def run(port,extra_files):
@@ -47,41 +58,30 @@ def run(port,extra_files):
 
 @app.route("/")
 def index():
-    return render_template('index.html')
-
-@app.route("/editor/theme/files/")
-def files():
-    tree = {}
-    rootDir = theme_path
-    for dirName, subdirList, fileList in os.walk(rootDir):
-        found_files = []
-        print subdirList
-        if subdirList:
-            for subdir in subdirList:
-                found_files.append({'name':subdir,'type':folder})
-        for fname in fileList:
-            if fname[-1:] != '~':
-                found_files.append(fname)
-        tree[dirName] = found_files
-    if tree:
-        return render_template('editor/file-tree.html',tree=tree)
-    abort(404)
+    return render_template('index.html',nav_items=nav.get_items())
 
 @app.route("/editor/", methods=["GET", "POST"])
 @app.route("/editor/<name>/", methods=["GET", "POST"])
 def editor(name=None):
     if name is None:
         if request.method == 'POST':
-            try:
-                f = open(rules_path, "w") # This will create a new file or **overwrite an existing file**.
-                try:
-                    f.write(request.form['rules']) # Write the xml to the file
-                finally:
-                    f.close()
-            except IOError:
-                pass
-        rules_xml = open(rules_path).read()
-        return render_template('editor/index.html',theme_path=theme_path,content_url=content_url,rules_xml=rules_xml,themed_url=themed_url)
+            editor.save_rules(request.form['rules'])
+        rules_xml = editor.get_rules()
+        file_tree = editor.get_file_tree(theme_path);
+        templates = editor.get_templates(theme_path);
+        vars = {
+            'theme_path':theme_path,
+            'content_url':content_url,
+            'rules_xml':rules_xml,
+            'tree':file_tree,
+            'templates':templates
+        }
+        # append the navigation with extra items
+        extra_items = [
+            {'text': 'Generate rule',       'slug':'',  'url':'Javascript:void(0);',    'class':''},
+            {'text': 'View themed website', 'slug':'',  'url':themed_url,               'class':''}
+        ]
+        return render_template('editor/index.html',nav_items=nav.get_items('theme_editor',extra_items),editor=vars)
     elif name == 'config':
         if request.method == 'POST':
             paste_config = request.form['paste_config']
@@ -93,8 +93,8 @@ def editor(name=None):
                     f.close()
             except IOError:
                pass
-        return render_template('editor/' + name + '.html', name=name, paste_config=open(paste_config_path).read())
-    return render_template('editor/' + name + '.html', name=name)
+        return render_template('editor/' + name + '.html',nav_items=nav.get_items('config_editor'), paste_config=open(paste_config_path).read())
+    return render_template('editor/' + name + '.html',nav_items=nav)
 
 @app.route("/editor/iframe/<name>/")
 @app.route("/editor/iframe/<name>/<filename>")
@@ -126,22 +126,6 @@ def iframe(name=None,filename='index.html'):
             url = content_url
             return render_template('editor/iframe-safe.html',url=url,content=content)
     abort(404)
-
-@app.route("/login/", methods=["GET", "POST"])
-def login():
-    return redirect(url_for('index'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        # login and validate the user...
-        login_user(user)
-        flash("Logged in successfully.")
-        return redirect(request.args.get("next") or url_for("index"))
-    return render_template("login.html", form=form)
-
-@app.route("/logout/")
-def logout():
-    #logout_user()
-    return redirect(url_for('login'))
 
 if __name__ == "__main__":
     main()

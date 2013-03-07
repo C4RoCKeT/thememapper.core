@@ -1,6 +1,7 @@
 $(function (){
     var current_hover, theme_selected, content_selected = null;
     var theme_frame = '#theme-iframe';
+    var content_frame = '#content-iframe';
     var theme_selector_selected = '#theme-selector-selected';
     var theme_selector_hover = '#theme-selector-hover';
     var content_selector_selected = '#content-selector-selected';
@@ -15,6 +16,61 @@ $(function (){
     $('#content-iframe').load(function() {
         onIframeLoad($(this));
     });
+    $('#file-tree a').click(function() {
+        var path = $(this).attr('data-path').replace(theme_path,'');
+        $('#theme-iframe').attr('src', "/editor/iframe/theme"+path);
+        return false;
+    });
+    $('#template-select').change(function() {
+        var path = $(this).val().replace(theme_path,'');
+        $('#theme-iframe').attr('src', "/editor/iframe/theme"+path);
+        return false;
+    });
+    $('.iframe-menu a.fullscreen').click(function() {
+        if($(this).attr('data-iframe') == 'theme') {
+            $(theme_frame).parent().css('width','100%');
+            $(theme_frame).css('height','800px');
+            $('#code-wrap').hide();
+            $(content_frame).parent().hide();
+            $('#theme-iframe-wrap .iframe-menu a.fullscreen').hide();
+            $('#theme-iframe-wrap .iframe-menu a.windowed').show();
+        } else  {
+            $(content_frame).parent().css('width','100%');
+            $(content_frame).css('height','800px');
+            $('#code-wrap').hide();
+            $(theme_frame).parent().hide();
+            $('#content-iframe-wrap .iframe-menu a.fullscreen').hide();
+            $('#content-iframe-wrap .iframe-menu a.windowed').show();
+        }
+        return false;
+    });
+    $('.iframe-menu a.windowed').click(function() {
+        if($(this).attr('data-iframe') == 'theme') {
+            $(theme_frame).parent().css('width','');
+            $(theme_frame).css('height','');
+            $('#code-wrap').show();
+            $(content_frame).parent().show();
+            $('#theme-iframe-wrap .iframe-menu a.fullscreen').show();
+            $('#theme-iframe-wrap .iframe-menu a.windowed').hide();
+        } else {
+            $(content_frame).parent().css('width','');
+            $(content_frame).css('height','');
+            $('#code-wrap').show();
+            $(theme_frame).parent().show();
+            $('#content-iframe-wrap .iframe-menu a.fullscreen').show();
+            $('#content-iframe-wrap .iframe-menu a.windowed').hide();
+        }
+        return false;
+    });
+    $('.iframe-menu a.parent').click(function() {
+        if($(this).attr('data-iframe') == 'theme') {
+            select_parent_element($(theme_frame),theme_selected);
+        } else {
+            select_parent_element($(content_frame),content_selected);
+        }
+        return false;
+    });
+
     $('.theme-mapper-generate').click(function() {
         if(theme_selected == undefined && content_selected  == undefined) {
             alert('Please select a theme or content element.');
@@ -91,13 +147,18 @@ $(function (){
             if(event.keyCode == 8 && current_selected != null) {
                 event.stopPropagation();
                 event.preventDefault();
-                var parent = current_selected.parentNode;
-                if(parent != null && parent.tagName != undefined) {
-                    setSelected(iframe,parent);
-                }
+                select_parent_element(iframe,current_selected);
             }
         });
     }
+
+    function select_parent_element(iframe,element) {
+        var parent = element.parentNode;
+        if(parent != null && parent.tagName != undefined) {
+            setSelected(iframe,parent);
+        }
+    }
+
     /**
      * Source: plone.app.theming mapper.js
      * Return a valid, unique XPath selector for the given element.
@@ -306,7 +367,7 @@ $(function (){
 
     }
     
-var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("rules"), {
+    var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("rules"), {
         mode:  "xml",
         lineNumbers: true,
         alignCDATA: true

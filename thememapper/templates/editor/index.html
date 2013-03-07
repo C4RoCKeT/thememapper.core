@@ -6,6 +6,9 @@
 <link rel="stylesheet" href="/static/js/codemirror/lib/codemirror.css" />
 {% endblock %}
 {% block javascript %}
+<script>
+    var theme_path = '{{ editor['theme_path'] }}';
+</script>
 <script src="/static/js/codemirror/lib/codemirror.js"></script>
 <script src="/static/js/codemirror/mode/xml/xml.js"></script>
 <script src="/static/js/editor.js"></script>
@@ -57,17 +60,36 @@
 </div>
 {% endblock %}
 {% block content %}
-<div class="iframe-wrap">
-    <div style="width:49%;float:left;">
-        <iframe id="theme-iframe" src=""></iframe>
+<div id="iframe-wrap">
+    <div id="theme-iframe-wrap">
+        <div class="btn-toolbar iframe-menu">
+            <div class="btn-group">
+                <a class="btn btn-mini parent" href="Javascript:void(0);" title="Select parent" data-iframe="theme"><i class="icon-arrow-up"></i></a>
+                <a class="btn btn-mini dropdown-toggle fullscreen" href="Javascript:void(0);" title="Maximize" data-iframe="theme"><i class="icon-resize-full"></i></a>
+                <a class="btn btn-mini windowed" href="Javascript:void(0);" title="Minimize" data-iframe="theme" style="display:none;"><i class="icon-resize-small"></i></a>
+            </div>
+            <select name="template-select" id="template-select" style="float:left;">
+                {% for template in editor['templates'] %}
+                <option value="{{ template['path'] }}">{{ template['name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <iframe id="theme-iframe" class="iframe" src=""></iframe>
         <div class="selector-wrap">
             <div class="selector" id="theme-selector-hover"></div>
             <div class="selector">Selector: <span id="theme-selector-selected"></span></div>
             <div class="cf"></div>
         </div>
     </div>
-    <div style="width:49%;float:right;">
-        <iframe id="content-iframe" src=""></iframe>
+    <div id="content-iframe-wrap">
+        <div class="btn-toolbar iframe-menu">
+            <div class="btn-group">
+                <a class="btn btn-mini parent" href="Javascript:void(0);" title="Select parent" data-iframe="content"><i class="icon-arrow-up"></i></a>
+                <a class="btn btn-mini dropdown-toggle fullscreen" href="Javascript:void(0);" title="Maximize" data-iframe="content"><i class="icon-resize-full"></i></a>
+                <a class="btn btn-mini windowed" href="Javascript:void(0);" title="Minimize" data-iframe="content" style="display:none;"><i class="icon-resize-small"></i></a>
+            </div>
+        </div>
+        <iframe id="content-iframe" class="iframe" src=""></iframe>
         <div class="selector-wrap">
             <div class="selector" id="content-selector-hover"></div>
             <div class="selector">Selector: <span id="content-selector-selected"></span></div>
@@ -76,11 +98,14 @@
     </div>
     <div class="cf"></div>
 </div>
-<div class="code-wrap">
+<div id="code-wrap">
     <form style="border:1px solid #ccc;" action="" method="post">
-        <textarea id="rules" name="rules" style="width:100%;min-height:300px;">{{ rules_xml }}</textarea>
-        <input style="float:right;" type="submit" value="Save rules.xml" />
+        <textarea id="rules" name="rules" style="width:100%;min-height:300px;">{{ editor.rules_xml }}</textarea>
+        <button class="btn btn-primary" style="margin-top:5px;float:right;" type="submit" />Save rules</button>
         <div class="clear"></div>
     </form>
 </div>
+<!--<div id="file-tree-wrap">
+    {% include "editor/file-tree.html" %}
+</div>-->
 {% endblock %}
