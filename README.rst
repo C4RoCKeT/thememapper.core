@@ -15,7 +15,15 @@ Now edit the "paste_config_path" variable found in /thememapper/config.py::
 
     paste_config_path = "/path/to/paste/config.ini" # the Diazo paste config. "proxy.ini" if you followed the quickstart
 
-Navigate to root of ThemeMapper and execute the following command to start it.
+Before running Thememapper you must also have Flask and libcurl installed.
+
+http://flask.pocoo.org/docs/installation/
+
+And
+
+https://pypi.python.org/pypi/pycurl
+
+Once you have those installed, navigate to the root of ThemeMapper and execute the following command to start it.
 
     $ python thememapper/thememapper.py
 

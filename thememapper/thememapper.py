@@ -78,8 +78,8 @@ def editor(name=None):
         }
         # append the navigation with extra items
         extra_items = [
-            {'text': 'Generate rule',       'slug':'',  'url':'Javascript:void(0);',    'class':''},
-            {'text': 'View themed website', 'slug':'',  'url':themed_url,               'class':''}
+            {'text': 'Generate rule',       'slug':'',  'url':'Javascript:void(0);',    'class':'extra theme-mapper-generate','target':'_self'},
+            {'text': 'View themed website', 'slug':'',  'url':themed_url,               'class':'extra',                     'target':'_blank'}
         ]
         return render_template('editor/index.html',nav_items=nav.get_items('theme_editor',extra_items),editor=vars)
     elif name == 'config':

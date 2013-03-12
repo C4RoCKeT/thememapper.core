@@ -10,7 +10,9 @@
             <div class="nav-collapse collapse">
                 <ul class="nav">
                     {% for nav_item in nav_items %}
-                    <li class="{{ nav_item['class'] }}"><a href="{{ nav_item.url }}">{{ nav_item['text'] }}</a></li>
+                    <li class="{{ nav_item['class'] }}">
+                        <a target="{{ nav_item['target'] }}" href="{{ nav_item['url'] }}">{{ nav_item['text'] }}</a>
+                    </li>
                     {% endfor %}
                 </ul>
             </div><!--/.nav-collapse -->

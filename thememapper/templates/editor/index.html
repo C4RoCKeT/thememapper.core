@@ -64,11 +64,11 @@
     <div id="theme-iframe-wrap">
         <div class="btn-toolbar iframe-menu">
             <div class="btn-group">
-                <a class="btn btn-mini parent" href="Javascript:void(0);" title="Select parent" data-iframe="theme"><i class="icon-arrow-up"></i></a>
+                <a class="btn btn-mini parent" href="Javascript:void(0);" title="Select parent" disabled="disabled" data-iframe="theme"><i class="icon-arrow-up"></i></a>
                 <a class="btn btn-mini dropdown-toggle fullscreen" href="Javascript:void(0);" title="Maximize" data-iframe="theme"><i class="icon-resize-full"></i></a>
                 <a class="btn btn-mini windowed" href="Javascript:void(0);" title="Minimize" data-iframe="theme" style="display:none;"><i class="icon-resize-small"></i></a>
             </div>
-            <select name="template-select" id="template-select" style="float:left;">
+            <select name="template-select" id="template-select" style="margin-bottom:0;float:left;">
                 {% for template in editor['templates'] %}
                 <option value="{{ template['path'] }}">{{ template['name'] }}</option>
                 {% endfor %}
@@ -84,7 +84,7 @@
     <div id="content-iframe-wrap">
         <div class="btn-toolbar iframe-menu">
             <div class="btn-group">
-                <a class="btn btn-mini parent" href="Javascript:void(0);" title="Select parent" data-iframe="content"><i class="icon-arrow-up"></i></a>
+                <a class="btn btn-mini parent" href="Javascript:void(0);" title="Select parent" disabled="disabled" data-iframe="content"><i class="icon-arrow-up"></i></a>
                 <a class="btn btn-mini dropdown-toggle fullscreen" href="Javascript:void(0);" title="Maximize" data-iframe="content"><i class="icon-resize-full"></i></a>
                 <a class="btn btn-mini windowed" href="Javascript:void(0);" title="Minimize" data-iframe="content" style="display:none;"><i class="icon-resize-small"></i></a>
             </div>

@@ -29,14 +29,14 @@ $(function (){
     $('.iframe-menu a.fullscreen').click(function() {
         if($(this).attr('data-iframe') == 'theme') {
             $(theme_frame).parent().css('width','100%');
-            $(theme_frame).css('height','800px');
+            $(theme_frame).css('height',($(window).height()-130) + 'px');
             $('#code-wrap').hide();
             $(content_frame).parent().hide();
             $('#theme-iframe-wrap .iframe-menu a.fullscreen').hide();
             $('#theme-iframe-wrap .iframe-menu a.windowed').show();
         } else  {
             $(content_frame).parent().css('width','100%');
-            $(content_frame).css('height','800px');
+            $(content_frame).css('height',($(window).height()-130) + 'px');
             $('#code-wrap').hide();
             $(theme_frame).parent().hide();
             $('#content-iframe-wrap .iframe-menu a.fullscreen').hide();
@@ -156,6 +156,28 @@ $(function (){
         var parent = element.parentNode;
         if(parent != null && parent.tagName != undefined) {
             setSelected(iframe,parent);
+            var grandparent = parent.parentNode;
+            if(grandparent == null || grandparent.tagName == undefined) {
+                disable_parent_button(iframe);
+            }
+        } else {
+            disable_parent_button(iframe);
+        }
+    }
+
+    function enable_parent_button(iframe) {
+        if(iframe.is(theme_frame)) {
+            $('#theme-iframe-wrap div.iframe-menu a.parent').removeAttr('disabled');
+        } else {
+            $('#content-iframe-wrap div.iframe-menu a.parent').removeAttr('disabled');
+        }
+    }
+
+    function disable_parent_button(iframe) {
+        if(iframe.is(theme_frame)) {
+            $('#theme-iframe-wrap div.iframe-menu a.parent').attr('disabled','disabled');
+        } else {
+            $('#content-iframe-wrap div.iframe-menu a.parent').attr('disabled','disabled');
         }
     }
 
@@ -275,6 +297,7 @@ $(function (){
                 $(content_selector_selected).html(selector);
                 content_selected = element;
             }
+            enable_parent_button(iframe);
             $(element).addClass(class_selected);
         } else {
             clearSelected(iframe,element);
@@ -285,9 +308,11 @@ $(function (){
         if(element != null) {
             $(element).removeClass(class_selected);
             if(iframe.is(theme_frame)) {
+                $('#theme-iframe-wrap div.iframe-menu a.parent').attr('disabled','disabled');
                 $(theme_selector_selected).html('');
                 theme_selected = null;
             } else {
+                $('#content-iframe-wrap div.iframe-menu a.parent').attr('disabled','disabled');
                 $(content_selector_selected).html('');
                 content_selected = null;
             }
