@@ -50,8 +50,3 @@ There aren't many requirements, technically just one. Namely: your rules.xml for
 So for example your theme is named "basic". The location of your rules.xml file would be:
 
     "/path/to/themes/directory/basic/rules.xml"
-
-Install and configure ThemeMapper
-=====
-
-TODO

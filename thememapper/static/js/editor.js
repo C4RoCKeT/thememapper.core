@@ -144,7 +144,7 @@ $(function (){
         });
         iframe.contents().keyup(function (event) {
             var current_selected = (iframe.is(theme_frame))?theme_selected:content_selected;
-            if(event.keyCode == 8 && current_selected != null) {
+            if(event.keyCode == 27 && current_selected != null) {
                 event.stopPropagation();
                 event.preventDefault();
                 select_parent_element(iframe,current_selected);
