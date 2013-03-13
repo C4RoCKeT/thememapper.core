@@ -9,6 +9,7 @@ setup(
     packages=['thememapper'],
     long_description=open('README.txt').read(),
     license='LICENSE.txt',
+    url='http://pypi.python.org/pypi/ThemeMapper/',
     classifiers=[
         "License :: OSI Approved :: GNU General Public License (GPL)",
         "Programming Language :: Python",
