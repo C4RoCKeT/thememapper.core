@@ -8,22 +8,22 @@ $(function (){
     var content_selector_hover = '#content-selector-hover';
     var class_selected = 'theme-mapper-selected';
     var class_hover = 'theme-mapper-hover';
-    $('#theme-iframe').attr('src', "/editor/iframe/theme");
+    $('#theme-iframe').attr('src', "/mapper/iframe/theme");
     $('#theme-iframe').load(function() {
         onIframeLoad($(this));
     });
-    $('#content-iframe').attr('src', "/editor/iframe/content");
+    $('#content-iframe').attr('src', "/mapper/iframe/content");
     $('#content-iframe').load(function() {
         onIframeLoad($(this));
     });
     $('#file-tree a').click(function() {
         var path = $(this).attr('data-path').replace(theme_path,'');
-        $('#theme-iframe').attr('src', "/editor/iframe/theme"+path);
+        $('#theme-iframe').attr('src', "/mapper/iframe/theme"+path);
         return false;
     });
     $('#template-select').change(function() {
         var path = $(this).val().replace(theme_path,'');
-        $('#theme-iframe').attr('src', "/editor/iframe/theme"+path);
+        $('#theme-iframe').attr('src', "/mapper/iframe/theme"+path);
         return false;
     });
     $('.iframe-menu a.fullscreen').click(function() {

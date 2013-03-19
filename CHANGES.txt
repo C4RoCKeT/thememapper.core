@@ -1,1 +1,4 @@
 v0.5, 2013-03-13 -- Initial release.
+v0.5.1, 2013-03-13 -- Removed line in __init__
+v0.5.2, 2013-03-14 -- Included more files via manifest and fixed readme.rst
+v0.5.4, 2013-03-14 -- Included the same files in setup.py

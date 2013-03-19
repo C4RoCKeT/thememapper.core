@@ -20,23 +20,24 @@
         {% block css %}{% endblock %}
     </head>
     <body class="{% block body_class %}{% endblock %}">
+        {% block body %}
         <div id="mask" class="mask">
             <div id="mask_content" class="mask">
-                    {% block mask_content %}{% endblock %}
-                </div>
+                {% block mask_content %}{% endblock %}
             </div>
-            <div id="content">
-                {% block navigation %}
-                {% endblock navigation %}
-                {% block body %}
-                <!--[if lt IE 7]>
-                    <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
-                <![endif]-->
-                {% block content %}
-                {% endblock content %}
-                {% block javascript %}
-                {% endblock javascript %}
-                {% endblock body %}
-            </div>
-        </body>
-    </html>
+        </div>
+        {% block navigation %}
+        {% endblock navigation %}
+
+        <div class="container">
+            <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+            <![endif]-->
+            {% block content %}
+            {% endblock content %}
+        </div>
+        {% block javascript %}
+        {% endblock javascript %}
+        {% endblock body %}
+    </body>
+</html>

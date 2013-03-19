@@ -7,11 +7,11 @@
 {% endblock %}
 {% block javascript %}
 <script>
-    var theme_path = '{{ editor['theme_path'] }}';
+    var theme_path = '{{ mapper['theme_path'] }}';
 </script>
 <script src="/static/js/codemirror/lib/codemirror.js"></script>
 <script src="/static/js/codemirror/mode/xml/xml.js"></script>
-<script src="/static/js/editor.js"></script>
+<script src="/static/js/mapper.js"></script>
 {% endblock %}
 {% block mask_content %}
 <div class="mask_content_block" id="rule_generate_box">
@@ -69,7 +69,7 @@
                 <a class="btn btn-mini windowed" href="Javascript:void(0);" title="Minimize" data-iframe="theme" style="display:none;"><i class="icon-resize-small"></i></a>
             </div>
             <select name="template-select" id="template-select" style="margin-bottom:0;float:left;">
-                {% for template in editor['templates'] %}
+                {% for template in mapper['templates'] %}
                 <option value="{{ template['path'] }}">{{ template['name'] }}</option>
                 {% endfor %}
             </select>
@@ -100,12 +100,12 @@
 </div>
 <div id="code-wrap">
     <form style="border:1px solid #ccc;" action="" method="post">
-        <textarea id="rules" name="rules" style="width:100%;min-height:300px;">{{ editor.rules_xml }}</textarea>
+        <textarea id="rules" name="rules" style="width:100%;min-height:300px;">{{ mapper['rules_xml'] }}</textarea>
         <button class="btn btn-primary" style="margin-top:5px;float:right;" type="submit" />Save rules</button>
         <div class="clear"></div>
     </form>
 </div>
 <!--<div id="file-tree-wrap">
-    {% include "editor/file-tree.html" %}
+    {% include "mapper/file-tree.html" %}
 </div>-->
 {% endblock %}

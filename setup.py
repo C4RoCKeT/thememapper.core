@@ -2,12 +2,13 @@ from setuptools import setup
 
 setup(
     name='ThemeMapper',
-    version='0.5',
+    version='0.5.4',
     description='Thememapper for Diazo',
     author='Brandon Tilstra',
     author_email='tilstra@gmail.com',
     packages=['thememapper'],
-    long_description=open('README.txt').read(),
+    package_dir={'static': 'thememapper/static','templates': 'thememapper/templates'},
+    long_description=open('README.rst').read(),
     license='LICENSE.txt',
     url='http://pypi.python.org/pypi/ThemeMapper/',
     classifiers=[
@@ -18,4 +19,11 @@ setup(
         "Topic :: Internet",
       ],
     install_requires=['Flask','pycurl'],
+    entry_points = {
+    'console_scripts': [
+                        'thememapper = thememapper.thememapper:main'
+                       ]
+    },
+    include_package_data=True,
+    zip_safe=False
 )

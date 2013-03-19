@@ -32,6 +32,8 @@ iframe.iframe { height:450px;width:100%;display: block;border: 1px solid #ccc;ma
 #mask_content .mask_content_block h1 { margin:0 auto; }
 #rule_preview { width:100% !important; resize: none;font-size:12px; }
 #rule_generate_box { display:none; }
+#rule_generate_box input { margin-top:auto; }
+#rule_generate_box label { margin-top:auto; display:inline; }
 .selector-wrap .selector{ float:left;width:50%;margin-top:0;margin-bottom:5px;height:24px;font-size:14px;line-height:24px;background-color:#ccc;text-align:right;padding-right:10px;box-sizing:border-box;-moz-box-sizing:border-box; }
 div.width-full { width: 100%; }
 .iframe-menu { text-align:right; }

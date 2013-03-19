@@ -1,6 +1,6 @@
 import os
 
-class Editor:
+class Mapper:
 
     def __init__(self,rules_path):
         self.rules_path = rules_path

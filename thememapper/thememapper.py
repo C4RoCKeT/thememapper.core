@@ -6,7 +6,7 @@ import optparse
 import os
 import config
 from navigation import Navigation
-from editor import Editor
+from mapper import Mapper
 
 class RegexConverter(BaseConverter):
     def __init__(self, url_map, *items):
@@ -24,51 +24,39 @@ def main():
     global paste_config_path
     global themed_url
     global nav
-    global editor
+    global mapper
 
     # Adds the ability to set config file and port through commandline
     p = optparse.OptionParser()
-    p.add_option('--config', '-c', default=config.paste_config_path)
+    p.add_option('--ip', '-i', default="0.0.0.0")
     p.add_option('--port', '-p', default=5001)
     options = p.parse_args()[0]
-    paste_config_path = options.config
     port = options.port
+    ip = options.ip
 
-    #reload if these files change
-    extra_files = [paste_config_path]
-    
-    # Read the Diazo paste config and set global variables
-    from ConfigParser import SafeConfigParser
-    parser = SafeConfigParser()
-    parser.read(paste_config_path)
-    content_url = parser.get('app:content','address')
-    rules_path = parser.get('filter:theme','rules')
-    themed_url = 'http://' + parser.get('server:main','host') + ':' + parser.get('server:main','port')
+    content_url = 'http://www.ping-win.nl/'
+    rules_path = '/home/c4rocket/Documents/Projects/diazo-test/themes/dangled/rules.xml'
+    themed_url = 'http://' + '127.0.0.1' + ':' + '5000'
     theme_path = os.path.dirname(rules_path)
-    parser.write(open(paste_config_path, 'w'))
-
     nav = Navigation()
-    editor = Editor(rules_path)
-
-    run(port,extra_files)
-
-def run(port,extra_files):
-    # Start the server
-    app.run('0.0.0.0', int(port),extra_files=extra_files)
+    mapper = Mapper(rules_path)
+    
+    #start thememapper
+    app.run(str(ip), int(port))
 
 @app.route("/")
 def index():
     return render_template('index.html',nav_items=nav.get_items())
 
-@app.route("/editor/", methods=["GET", "POST"])
-@app.route("/editor/<name>/", methods=["GET", "POST"])
-def editor(name=None):
+@app.route("/mapper/", methods=["GET", "POST"])
+@app.route("/mapper/<name>/", methods=["GET", "POST"])
+def mapper(name=None):
     if name is None:
         if request.method == 'POST':
-            editor.save_rules(request.form['rules'])
-        rules_xml = editor.get_rules()
-        file_tree = editor.get_file_tree(theme_path);
-        templates = editor.get_templates(theme_path);
+            mapper.save_rules(request.form['rules'])
+        rules_xml = mapper.get_rules()
+        file_tree = mapper.get_file_tree(theme_path);
+        templates = mapper.get_templates(theme_path);
         vars = {
             'theme_path':theme_path,
             'content_url':content_url,
@@ -81,24 +69,20 @@ def editor(name=None):
             {'text': 'Generate rule',       'slug':'',  'url':'Javascript:void(0);',    'class':'extra theme-mapper-generate','target':'_self'},
             {'text': 'View themed website', 'slug':'',  'url':themed_url,               'class':'extra',                     'target':'_blank'}
         ]
-        return render_template('editor/index.html',nav_items=nav.get_items('theme_editor',extra_items),editor=vars)
-    elif name == 'config':
-        if request.method == 'POST':
-            paste_config = request.form['paste_config']
-            try:
-                f = open(paste_config_path, "w") # This will create a new file or **overwrite an existing file**.
-                try:
-                    f.write(paste_config) # Write the paste config
-                finally:
-                    f.close()
-            except IOError:
-               pass
-        return render_template('editor/' + name + '.html',nav_items=nav.get_items('config_editor'), paste_config=open(paste_config_path).read())
-    return render_template('editor/' + name + '.html',nav_items=nav)
+        return render_template('mapper/index.html',nav_items=nav.get_items('theme_mapper',extra_items),mapper=vars)
+    return render_template('mapper/' + name + '.html',nav_items=nav.get_items('theme_mapper'))
 
-@app.route("/editor/iframe/<name>/")
-@app.route("/editor/iframe/<name>/<filename>")
-@app.route('/editor/iframe/<name>/<regex("(.*/)([^/]*)"):filename>')
+@app.route("/settings/", methods=["GET", "POST"])
+@app.route("/settings/<name>/", methods=["GET", "POST"])
+def settings(name=None):
+    if name is None:
+        return render_template('settings/index.html',nav_items=nav.get_items('settings'))
+    return render_template('mapper/' + name + '.html',nav_items=nav.get_items('settings'))
+
+
+@app.route("/mapper/iframe/<name>/")
+@app.route("/mapper/iframe/<name>/<filename>")
+@app.route('/mapper/iframe/<name>/<regex("(.*/)([^/]*)"):filename>')
 def iframe(name=None,filename='index.html'):
     if name is not None:
         if name == 'theme':
@@ -124,7 +108,7 @@ def iframe(name=None,filename='index.html'):
             content = buf.getvalue()
             buf.close()
             url = content_url
-            return render_template('editor/iframe-safe.html',url=url,content=content)
+            return render_template('mapper/iframe-safe.html',url=url,content=content)
     abort(404)
 
 if __name__ == "__main__":
