@@ -1,1 +1,0 @@
-paste_config_path = "/path/to/paste/config.ini" # the Diazo paste config. "proxy.ini" if you followed the quickstart

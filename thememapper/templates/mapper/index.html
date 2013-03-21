@@ -7,7 +7,7 @@
 {% endblock %}
 {% block javascript %}
 <script>
-    var theme_path = '{{ mapper['theme_path'] }}';
+    var theme_path = '{{ mapper.theme_path }}';
 </script>
 <script src="/static/js/codemirror/lib/codemirror.js"></script>
 <script src="/static/js/codemirror/mode/xml/xml.js"></script>
@@ -69,7 +69,7 @@
                 <a class="btn btn-mini windowed" href="Javascript:void(0);" title="Minimize" data-iframe="theme" style="display:none;"><i class="icon-resize-small"></i></a>
             </div>
             <select name="template-select" id="template-select" style="margin-bottom:0;float:left;">
-                {% for template in mapper['templates'] %}
+                {% for template in mapper.get_templates() %}
                 <option value="{{ template['path'] }}">{{ template['name'] }}</option>
                 {% endfor %}
             </select>
@@ -100,7 +100,7 @@
 </div>
 <div id="code-wrap">
     <form style="border:1px solid #ccc;" action="" method="post">
-        <textarea id="rules" name="rules" style="width:100%;min-height:300px;">{{ mapper['rules_xml'] }}</textarea>
+        <textarea id="rules" name="rules" style="width:100%;min-height:300px;">{{ mapper.get_rules() }}</textarea>
         <button class="btn btn-primary" style="margin-top:5px;float:right;" type="submit" />Save rules</button>
         <div class="clear"></div>
     </form>
