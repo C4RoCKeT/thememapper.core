@@ -27,7 +27,9 @@ class Mapper:
             pass
 
     def get_rules(self):
-        return open(self.rules_path).read()
+        if os.path.isfile(self.rules_path):
+            return open(self.rules_path).read()
+        return False
 
     def get_file_tree(self,root_dir=None):
         if root_dir is None:
