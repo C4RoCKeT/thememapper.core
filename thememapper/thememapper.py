@@ -93,9 +93,8 @@ def iframe(name=None,filename='index.html'):
     abort(404)
     
 def get_settings(config=False,path='settings.properties'):
-    
     from ConfigParser import SafeConfigParser
-    settings_file = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), path)
+    settings_file = os.path.join(os.path.dirname(__file__), path)
     parser = SafeConfigParser()
     # Read the Diazo paste config and set global variables
     opened_files = parser.read(settings_file)

@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='ThemeMapper',
-    version='0.5.4',
+    version='0.5.7',
     description='Thememapper for Diazo',
     author='Brandon Tilstra',
     author_email='tilstra@gmail.com',
@@ -18,7 +18,7 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Internet",
       ],
-    install_requires=['Flask','pycurl'],
+    install_requires=['Flask','requests'],
     entry_points = {
     'console_scripts': [
                         'thememapper = thememapper.thememapper:main'
