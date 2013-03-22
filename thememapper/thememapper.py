@@ -38,7 +38,13 @@ def main():
 
 @app.route("/")
 def index():
-    return render_template('index.html',nav_items=nav.get_items(),mapper=mapper)
+    themes = mapper.get_themes()
+    amount= len(themes)
+    preview = False
+    for theme in themes:
+        if theme['active'] and 'preview' in theme:
+            preview = theme['preview']
+    return render_template('index.html',nav_items=nav.get_items(),mapper=mapper,amount=amount,theme=mapper.theme,preview=preview)
 
 @app.route("/mapper/", methods=["GET", "POST"])
 @app.route("/mapper/<name>/", methods=["GET", "POST"])
@@ -59,24 +65,21 @@ def mapper(name=None):
 def settings(name=None):
     if name is None:
         if request.method == 'POST':
-            print request.form
             save_settings(request.form)
             mapper.reload(get_settings())
-        print mapper.get_themes()
         return render_template('settings/index.html',nav_items=nav.get_items('settings'),settings=get_settings(),mapper=mapper)
     return render_template('mapper/' + name + '.html',nav_items=nav.get_items('settings'))
 
 
 @app.route("/mapper/iframe/<name>/")
-@app.route("/mapper/iframe/<name>/<filename>")
-@app.route('/mapper/iframe/<name>/<regex("(.*/)([^/]*)"):filename>')
+@app.route('/mapper/iframe/<name>/<regex("(.*)"):filename>')
 def iframe(name=None,filename='index.html'):
     if name is not None:
         if name == 'theme':
             # Only local themes are supported right now.
             import mimetypes
             mimetypes.init()
-            path = mapper.theme_path + '/' + filename
+            path = os.path.join(mapper.theme_path,"/" + filename)
             # Check the file exists; if so, open it, return it with the correct mimetype.
             if os.path.isfile(path):
                 return Response(file(path), direct_passthrough=True,mimetype=mimetypes.types_map[os.path.splitext(path)[1]])

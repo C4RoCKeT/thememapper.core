@@ -61,7 +61,7 @@ class Mapper:
                     extension = os.path.splitext(filename)[1]
                     if extension == '.html' or extension == '.htm':
                         templates.append({
-                        'path':dirname + '/' + filename,
+                        'path':os.path.join(dirname,filename),
                         'name':filename
                         })
         return templates
@@ -77,12 +77,15 @@ class Mapper:
                 # don't go into any .git directories.
                 dirnames.remove('.git')
             if filenames:
+                theme = {}
                 for filename in filenames:
+                    basename = os.path.splitext(filename)[0]
                     if filename == 'rules.xml':
                         name = os.path.basename(dirname)
-                        print name + "==" + self.theme + "\n\r"
-                        themes.append({
-                        'name':name,
-                        'active':True if name == self.theme else False
-                        })
+                        theme['name'] = name
+                        theme['active'] = True if name == self.theme else False
+                    if basename == 'preview':
+                        theme['preview'] = os.path.join(dirname,filename)
+                if 'name' in theme:
+                    themes.append(theme)
         return themes

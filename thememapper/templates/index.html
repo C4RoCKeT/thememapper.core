@@ -5,7 +5,11 @@
 {% endblock %}
 {% block content %}
 <!-- Add your site or application content here -->
-Show active Theme and content url.... amount of themes found?
+<h3>Number of themes found:</h3>
+<h4 style="color:#00858c;">{{ amount }}</h4>
 <h3>Current Theme:</h3>
-{{ mapper.active_theme }}
+<h4 style="color:#00858c;">{{ theme }}</h4>
+{% if preview %}
+<img src="/mapper/iframe/theme/{{ preview }}" />
+{% endif %}
 {% endblock %}
