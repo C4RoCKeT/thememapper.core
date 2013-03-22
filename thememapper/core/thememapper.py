@@ -21,6 +21,7 @@ app.url_map.converters['regex'] = RegexConverter
 def main():
     global nav
     global mapper
+    global module_path
     
     #initialize the necessary classes
     nav = Navigation()
@@ -29,12 +30,13 @@ def main():
     p = optparse.OptionParser()
     p.add_option('--ip', '-i', default=mapper.ip)
     p.add_option('--port', '-p', default=mapper.port)
+    module_path = os.path.dirname(__file__)
     options = p.parse_args()[0]
     port = options.port
     ip = options.ip
     
     #start thememapper
-    app.run(str(ip), int(port),extra_files=[os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), "settings.properties")])
+    app.run(str(ip), int(port),extra_files=[module_path, "settings.properties"])
 
 @app.route("/")
 def index():
@@ -94,7 +96,7 @@ def iframe(name=None,filename='index.html'):
     
 def get_settings(config=False,path='settings.properties'):
     from ConfigParser import SafeConfigParser
-    settings_file = os.path.join(os.path.dirname(__file__), path)
+    settings_file = os.path.join(module_path, path)
     parser = SafeConfigParser()
     # Read the Diazo paste config and set global variables
     opened_files = parser.read(settings_file)
@@ -124,7 +126,7 @@ def save_settings(settings,path='settings.properties'):
     parser.set('thememapper','theme',settings['thememapper_theme'] if 'thememapper_theme' in settings else '')
     parser.set('diazo','ip',settings['diazo_ip'])
     parser.set('diazo','port',settings['diazo_port'])
-    with open(os.path.join(os.path.dirname(__file__), path), 'wb') as settings_file:
+    with open(os.path.join(module_path, path), 'wb') as settings_file:
         parser.write(settings_file)
     
 
