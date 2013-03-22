@@ -5,3 +5,5 @@ v0.5.4, 2013-03-14 -- Included the same files in setup.py
 v0.5.5, 2013-03-22 -- Changes quite a few things. Applied Twitter boostrap, added settings, works without Diazo paste config.
 v0.5.6, 2013-03-22 -- Fixed location of properties file
 v0.5.7, 2013-03-22 -- Added 'requests' as dependency
+v0.5.8, 2013-03-22 -- Fixed bug with saving settings when no valid themes directory was specified
+v0.5.9, 2013-03-22 -- Fixed bug with saving settings: settings where not saved.

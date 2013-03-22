@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="A thememapper for Diazo">
+        <meta name="author" content="Brandon Tilstra">
+        <title>{% block page_title %}{% endblock %}</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="/static/favicon.ico" />
+        <link rel="stylesheet" href="/static/css/style.css" type="text/css" />
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen">
+        <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" media="screen">
+        <style>
+            body {
+                padding-top: 45px; /* 60px to make the container go all the way to the bottom of the topbar */
+            }
+        </style>
+        {% block css %}{% endblock %}
+    </head>
+    <body class="{% block body_class %}{% endblock %}">
+        {% block body %}
+        <div id="mask" class="mask">
+            <div id="mask_content" class="mask">
+                {% block mask_content %}{% endblock %}
+            </div>
+        </div>
+        {% block navigation %}
+        {% endblock navigation %}
+
+        <div class="container">
+            <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+            <![endif]-->
+            {% block content %}
+            {% endblock content %}
+        </div>
+        {% block javascript %}
+        {% endblock javascript %}
+        {% endblock body %}
+    </body>
+</html>

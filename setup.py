@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='ThemeMapper',
-    version='0.5.7',
+    version='0.5.9',
     description='Thememapper for Diazo',
     author='Brandon Tilstra',
     author_email='tilstra@gmail.com',

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block navigation%}
+{% include "nav.html" %}
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="/static/js/codemirror/lib/codemirror.css" />
+{% endblock %}
+{% block javascript %}
+<script>
+    var theme_path = '{{ mapper.theme_path }}';
+</script>
+<script src="/static/js/codemirror/lib/codemirror.js"></script>
+<script src="/static/js/codemirror/mode/xml/xml.js"></script>
+<script src="/static/js/mapper.js"></script>
+{% endblock %}
+{% block mask_content %}
+<div class="mask_content_block" id="rule_generate_box">
+    <h1>Generate Rule</h1>
+    <hr/>
+    <div>
+        <form id="rule_generate_form" action="" method="get">
+            <div class="selector_both">
+                <input id="radio_action_replace" name="rule_type" type="radio" value="replace"/>
+                <label for="radio_action_replace">Replace</label>
+            </div>
+            <div class="selector_content">
+                <input id="radio_action_drop_content" name="rule_type" type="radio" value="drop_content"/>
+                <label for="radio_action_drop_content">Drop content element</label>
+            </div>
+            <div class="selector_theme">
+                <input id="radio_action_drop_theme" name="rule_type" type="radio" value="drop_theme"/>
+                <label for="radio_action_drop_theme">Drop theme element</label>
+            </div>
+            <div class="selector_both">
+                <input id="radio_action_before" name="rule_type" type="radio" value="before"/>
+                <label for="radio_action_before">Before</label>
+            </div>
+            <div class="selector_both">
+                <input id="radio_action_after" name="rule_type" type="radio" value="after"/>
+                <label for="radio_action_after">After</label>
+            </div>
+            <hr/>
+            <div id="theme-applyto">
+                <input id="checkbox_theme_children" type="checkbox" name="checkbox_theme_children" value="1" />
+                <label for="checkbox_theme_children">Apply to theme node children</label>
+            </div>
+
+            <div id="content-applyto">
+                <input id="checkbox_content_children" type="checkbox" name="checkbox_content_children" value="1" />
+                <label for="checkbox_content_children">Apply to content node children</label>
+            </div>
+            <hr/>
+            <textarea id="rule_preview"></textarea>
+            <div style="text-align:right">
+                <button type="button" class="button_cancel">Cancel</button>
+                <button type="button" class="button_ok">Generate</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div id="iframe-wrap">
+    <div id="theme-iframe-wrap">
+        <div class="btn-toolbar iframe-menu">
+            <div class="btn-group">
+                <a class="btn btn-mini parent" href="Javascript:void(0);" title="Select parent" disabled="disabled" data-iframe="theme"><i class="icon-arrow-up"></i></a>
+                <a class="btn btn-mini dropdown-toggle fullscreen" href="Javascript:void(0);" title="Maximize" data-iframe="theme"><i class="icon-resize-full"></i></a>
+                <a class="btn btn-mini windowed" href="Javascript:void(0);" title="Minimize" data-iframe="theme" style="display:none;"><i class="icon-resize-small"></i></a>
+            </div>
+            <select name="template-select" id="template-select" style="margin-bottom:0;float:left;">
+                {% for template in mapper.get_templates() %}
+                <option value="{{ template['path'] }}">{{ template['name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <iframe id="theme-iframe" class="iframe" src=""></iframe>
+        <div class="selector-wrap">
+            <div class="selector" id="theme-selector-hover"></div>
+            <div class="selector">Selector: <span id="theme-selector-selected"></span></div>
+            <div class="cf"></div>
+        </div>
+    </div>
+    <div id="content-iframe-wrap">
+        <div class="btn-toolbar iframe-menu">
+            <div class="btn-group">
+                <a class="btn btn-mini parent" href="Javascript:void(0);" title="Select parent" disabled="disabled" data-iframe="content"><i class="icon-arrow-up"></i></a>
+                <a class="btn btn-mini dropdown-toggle fullscreen" href="Javascript:void(0);" title="Maximize" data-iframe="content"><i class="icon-resize-full"></i></a>
+                <a class="btn btn-mini windowed" href="Javascript:void(0);" title="Minimize" data-iframe="content" style="display:none;"><i class="icon-resize-small"></i></a>
+            </div>
+        </div>
+        <iframe id="content-iframe" class="iframe" src=""></iframe>
+        <div class="selector-wrap">
+            <div class="selector" id="content-selector-hover"></div>
+            <div class="selector">Selector: <span id="content-selector-selected"></span></div>
+            <div class="cf"></div>
+        </div>
+    </div>
+    <div class="cf"></div>
+</div>
+<div id="code-wrap">
+    <form style="border:1px solid #ccc;" action="" method="post">
+        <textarea id="rules" name="rules" style="width:100%;min-height:300px;">{{ mapper.get_rules() }}</textarea>
+        <button class="btn btn-primary" style="margin-top:5px;float:right;" type="submit" />Save rules</button>
+        <div class="clear"></div>
+    </form>
+</div>
+<!--<div id="file-tree-wrap">
+    {% include "mapper/file-tree.html" %}
+</div>-->
+{% endblock %}

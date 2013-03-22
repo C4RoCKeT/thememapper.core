@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block navigation%}
+{% include "nav.html" %}
+{% endblock %}
+{% block content %}
+<form method="post" action="">
+    <h2>ThemeMapper Settings</h2>
+    <label>Address</label>
+    <input type="text" name="thememapper_ip" value="{{ settings['thememapper_ip'] }}" placeholder="0.0.0.0" style="margin-right:5px;" /><input type="text" name="thememapper_port" value="{{ settings['thememapper_port'] }}" placeholder="5001" />
+    <label>Content url</label>
+    <input type="text" name="thememapper_content_url" value="{{ settings['thememapper_content_url'] }}" placeholder="http://localhost/" />
+    <label>Themes directory</label>
+    <input type="text" name="thememapper_themes_directory" value="{{ settings['thememapper_themes_directory'] }}" placeholder="/path/to/themes/" />
+    <label>Active theme</label>
+    <select name="thememapper_theme">
+        {% for theme in mapper.get_themes() %}
+            <option value="{{ theme['name'] }}" {% if theme['active'] %}selected="selected"{% endif %}>{{ theme['name'] }}</option>
+        {% endfor %}
+    </select>
+    {% for theme in mapper.get_themes() %}
+    {% if 'preview' in theme %}
+        <img src="/mapper/iframe/theme/{{ theme['preview'] }}" />
+    {% endif %}
+    {% endfor %}
+    <h2>Diazo Settings</h2>
+    <label>Address</label>
+    <input type="text" name="diazo_ip" value="{{ settings['diazo_ip'] }}" placeholder="127.0.0.1" style="margin-right:5px;" /><input type="text" name="diazo_port" value="{{ settings['diazo_port'] }}" placeholder="5000" />
+    <br/>
+    <button class="btn btn-primary" style="margin-top:5px;" type="submit">Save settings</button>
+</form>
+{% endblock %}
