@@ -43,10 +43,8 @@ It will use::
 The rules path will be used for the rules.xml, but it will be also used for the theme directory (strips rules.xml).
 The address will be the content url. You could use an external address here, but I don't give a guarantee it will work.
 
-Theme requirements
+ThemeMapper requirements
 =====
 
-There aren't many requirements, technically just one. Namely: your rules.xml for that specific theme should be in the root of the theme directory.
-So for example your theme is named "basic". The location of your rules.xml file would be:
-
-    "/path/to/themes/directory/basic/rules.xml"
+There aren't any real requirements. You can run ThemeMapper as a standalone application. Though you might find it useful to
+run a Diazo instance and specify the Diazo address in the settings. That way you can preview your mappings.
