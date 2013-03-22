@@ -26,6 +26,5 @@ setup(
                         'thememapper = thememapper.core.thememapper:main'
                        ]
     },
-    include_package_data=True,
     zip_safe=False
 )
