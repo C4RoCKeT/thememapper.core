@@ -20,7 +20,7 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Internet",
       ],
-    install_requires=['setuptools','Flask','requests','urlparse'],
+    install_requires=['setuptools','Flask','requests'],
     entry_points = {
     'console_scripts': [
                         'thememapper = thememapper.core.thememapper:main'
