@@ -23,7 +23,7 @@ setup(
     install_requires=['setuptools','Flask','requests','tornado'],
     entry_points = {
     'console_scripts': [
-                        'thememapper = thememapper.core.thememapper:main'
+                        'thememapper = thememapper.core.main:start_thememapper'
                        ]
     },
     zip_safe=False

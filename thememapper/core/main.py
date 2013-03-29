@@ -21,7 +21,7 @@ app.debug = True
 
 app.url_map.converters['regex'] = RegexConverter
 
-def main():
+def start_thememapper():
     global nav
     global mapper
     #initialize the necessary classes
@@ -35,11 +35,11 @@ def main():
     port = options.port
     ip = options.ip
     #start thememapper
+    HTTPServer(WSGIContainer(app)).listen(port)
     if mapper.diazo_run:
-        HTTPServer(WSGIContainer(app)).listen(port)
         try: 
             from thememapper.diazo import server
-            #HTTPServer(server.get_application()).listen(mapper.diazo_port)
+            HTTPServer(server.get_diazo_server()).listen(mapper.diazo_port)
         except ImportError: 
             print "You will need to install thememapper.diazo before being able to use this function." 
     ioloop = IOLoop.instance()
@@ -143,4 +143,4 @@ def save_settings(settings,path='settings.properties'):
         parser.write(settings_file)
 
 if __name__ == "__main__":
-    main()
+    start_thememapper()
