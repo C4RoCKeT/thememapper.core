@@ -39,7 +39,7 @@ def main():
         HTTPServer(WSGIContainer(app)).listen(port)
         try: 
             from thememapper.diazo import server
-            HTTPServer(server.get_application()).listen(mapper.diazo_port)
+            #HTTPServer(server.get_application()).listen(mapper.diazo_port)
         except ImportError: 
             print "You will need to install thememapper.diazo before being able to use this function." 
     ioloop = IOLoop.instance()
