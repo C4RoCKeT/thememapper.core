@@ -44,6 +44,7 @@ def start_thememapper():
         except ImportError: 
             print "You will need to install thememapper.diazo before being able to use this function." 
     ioloop = IOLoop.instance()
+    autoreload.watch('settings.properties')
     autoreload.start(ioloop)
     ioloop.start()
 
