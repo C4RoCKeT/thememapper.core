@@ -1,1 +1,1 @@
-# Silence is golden
+# This package may contain traces of nuts
