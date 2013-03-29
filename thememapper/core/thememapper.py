@@ -10,7 +10,6 @@ import optparse
 import os
 from navigation import Navigation
 from mapper import Mapper
-import thememapper.diazo
 
 class RegexConverter(BaseConverter):
     def __init__(self, url_map, *items):
