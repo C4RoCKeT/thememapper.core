@@ -8,11 +8,14 @@ $(function (){
     var content_selector_hover = '#content-selector-hover';
     var class_selected = 'theme-mapper-selected';
     var class_hover = 'theme-mapper-hover';
-    load_theme_template($('#template-select').val())
+    var highLighter = true;
+    load_theme_iframe($('#template-select').val())
     $('#theme-iframe').load(function() {
         onIframeLoad($(this));
     });
-    $('#content-iframe').attr('src', "/mapper/iframe/content");
+    
+    //$('#content-iframe').attr('src', "/mapper/iframe/content");
+    load_content_iframe();
     $('#content-iframe').load(function() {
         onIframeLoad($(this));
     });
@@ -22,7 +25,7 @@ $(function (){
         return false;
     });
     $('#template-select').change(function() {
-        load_theme_template($(this).val())
+        load_theme_iframe($(this).val())
     });
     $('.iframe-menu a.fullscreen').click(function() {
         if($(this).attr('data-iframe') == 'theme') {
@@ -67,6 +70,10 @@ $(function (){
             select_parent_element($(content_frame),content_selected);
         }
         return false;
+    });
+    $('.iframe-menu a#highlighter').click(function() {
+        highLighter = !highLighter;
+        clearSelected($(content_frame),content_selected);
     });
 
     $('.theme-mapper-generate').click(function() {
@@ -118,9 +125,18 @@ $(function (){
         hideMask();
     });
     
-    function load_theme_template(path) {
-        console.log(path);
+    function load_theme_iframe(path) {
         $('#theme-iframe').attr('src', "/mapper/iframe/theme"+path);
+        return false;
+    }
+    
+    function load_content_iframe(url) {
+        if(url != undefined) {
+            url = "/" + url;
+        } else {
+            url = ""
+        }
+        $('#content-iframe').attr('src', "/mapper/iframe/content"+url);
         return false;
     }
 
@@ -131,7 +147,9 @@ $(function (){
         iframe.contents().find('head').append('<style>* { cursor:crosshair !important; } .theme-mapper-hover { outline:1px solid red !important; } .theme-mapper-selected { outline:1px solid blue !important; } .theme-mapper-inline-to-inline-block { display:inline-block !important; } * { cursor:default; } </style>');
         iframe.contents().find('*').hover(
             function() {
-                setHoverOutline(iframe,this);
+                if(highLighter || iframe.is(theme_frame)) {
+                    setHoverOutline(iframe,this);
+                }
             },
             function() {
                 /**
@@ -140,10 +158,19 @@ $(function (){
                 if($(this).hasClass(class_hover)) {
                     clearHoverOutline(this);
                 }
-            }).click(function(event) {
-            event.stopPropagation();
+            }).click(
+            function(event) {
+                event.preventDefault();
+                if(highLighter || iframe.is(theme_frame)) {
+                    event.stopPropagation();
+                    setSelected(iframe,this);
+                } else if($(this).is('a')) {
+                    load_content_iframe($(this).prop('href'));
+                    return false;
+                }
+            });
+        iframe.contents().find('form').submit(function(event) {
             event.preventDefault();
-            setSelected(iframe,this);
             return false;
         });
         iframe.contents().keyup(function (event) {
@@ -235,7 +262,6 @@ $(function (){
             var selector = calculateCSSSelector(element);
             paths.splice(0, 0, selector);
             path = paths.join(" ");
-
             // The ultimateParent constraint is necessary since
             // this may be inside an iframe
             if($(path, ultimateParent).length == 1) {
@@ -328,8 +354,7 @@ $(function (){
     }
 
     function previewRule(rule_type) {
-        rule_preview = $('#rule_preview');
-        rule_preview.val(generateRule(rule_type));
+        $('#rule_preview').val(generateRule(rule_type));
     }
 
     function hideMask() {

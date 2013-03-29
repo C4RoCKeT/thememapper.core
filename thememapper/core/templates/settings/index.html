@@ -2,6 +2,18 @@
 {% block navigation%}
 {% include "nav.html" %}
 {% endblock %}
+{% block javascript %}
+<script>
+    $(function() {
+        $('img.theme-images').hide();
+        $('#theme-' + $('select[name=thememapper_theme]').val()).show();
+        $('select[name=thememapper_theme]').change(function() {
+            $('img.theme-images').hide();
+            $('#theme-' + $(this).val()).show();
+        });
+    });
+</script>
+{% endblock %}
 {% block content %}
 <form method="post" action="">
     <h2>ThemeMapper Settings</h2>
@@ -16,10 +28,10 @@
         {% for theme in mapper.get_themes() %}
             <option value="{{ theme['name'] }}" {% if theme['active'] %}selected="selected"{% endif %}>{{ theme['name'] }}</option>
         {% endfor %}
-    </select>
+    </select><br/>
     {% for theme in mapper.get_themes() %}
     {% if 'preview' in theme %}
-        <img src="/mapper/iframe/theme/{{ theme['preview'] }}" />
+        <img class="theme-images" id="theme-{{ theme['name'] }}" src="/mapper/iframe/theme/{{ theme['preview'] }}" />
     {% endif %}
     {% endfor %}
     <h2>Diazo Settings</h2>

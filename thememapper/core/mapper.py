@@ -11,10 +11,15 @@ class Mapper:
         cls.theme_path = os.path.join(cls.themes_dir,cls.theme)
         cls.rules_path = os.path.join(cls.theme_path,'rules.xml')
         cls.content_url = settings['thememapper_content_url']
-        cls.themed_url = 'http://' + settings['diazo_ip'] + ':' + settings['diazo_port']
+        cls.diazo_ip = settings['diazo_ip']
+        cls.diazo_port = settings['diazo_port']
+        cls.themed_url = cls.set_themed_url(cls.content_url)
         cls.ip = settings['thememapper_ip']
         cls.port = settings['thememapper_port']
         
+    def set_themed_url(cls,content_url):
+        from urlparse import urlparse,urljoin
+        return urljoin('http://' + cls.diazo_ip + ':' + cls.diazo_port,urlparse(content_url).path)
     
     def save_rules(self,rules):
         try:

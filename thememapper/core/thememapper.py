@@ -1,10 +1,13 @@
 from flask import Flask,request
 from flask import render_template,Response
 from flask import abort
+from tornado.wsgi import WSGIContainer
+from tornado.httpserver import HTTPServer
+from tornado.ioloop import IOLoop
+from tornado import autoreload
 from werkzeug.routing import BaseConverter
 import optparse
 import os
-import sys
 from navigation import Navigation
 from mapper import Mapper
 
@@ -21,22 +24,22 @@ app.url_map.converters['regex'] = RegexConverter
 def main():
     global nav
     global mapper
-    global module_path
-    
     #initialize the necessary classes
-    nav = Navigation()
     mapper = Mapper(get_settings())
+    nav = Navigation()
     # Adds the ability to set config file and port through commandline
     p = optparse.OptionParser()
     p.add_option('--ip', '-i', default=mapper.ip)
     p.add_option('--port', '-p', default=mapper.port)
-    module_path = os.path.dirname(__file__)
     options = p.parse_args()[0]
     port = options.port
     ip = options.ip
     
     #start thememapper
-    app.run(str(ip), int(port),extra_files=[module_path, "settings.properties"])
+    HTTPServer(WSGIContainer(app)).listen(port)
+    ioloop = IOLoop.instance()
+    autoreload.start(ioloop)
+    ioloop.start()
 
 @app.route("/")
 def index():
@@ -74,29 +77,31 @@ def settings(name=None):
 
 
 @app.route("/mapper/iframe/<name>/")
-@app.route('/mapper/iframe/<name>/<regex("(.*)"):filename>')
-def iframe(name=None,filename='index.html'):
+@app.route('/mapper/iframe/<name>/<regex("(.*)"):path>')
+def iframe(name=None,path='index.html'):
     if name is not None:
         if name == 'theme':
             # Only local themes are supported right now.
             import mimetypes
             mimetypes.init()
-            path = os.path.join(mapper.theme_path,"/" + filename)
+            path = os.path.join(mapper.theme_path,"/" + path)
             # Check the file exists; if so, open it, return it with the correct mimetype.
             if os.path.isfile(path):
                 return Response(file(path), direct_passthrough=True,mimetype=mimetypes.types_map[os.path.splitext(path)[1]])
             else:
                 abort(404)
         else:
+            if path == '':
+                path = mapper.content_url
             #use the requests library to get the content of the content website
             import requests
-            r = requests.get(mapper.content_url)
-            return render_template('mapper/iframe-safe.html',url=mapper.content_url,content=r.text)
+            r = requests.get(path)
+            return render_template('mapper/iframe-safe.html',url=path,content=r.text)
     abort(404)
     
 def get_settings(config=False,path='settings.properties'):
     from ConfigParser import SafeConfigParser
-    settings_file = os.path.join(module_path, path)
+    settings_file = os.path.join(os.path.dirname(__file__), path)
     parser = SafeConfigParser()
     # Read the Diazo paste config and set global variables
     opened_files = parser.read(settings_file)
@@ -126,9 +131,8 @@ def save_settings(settings,path='settings.properties'):
     parser.set('thememapper','theme',settings['thememapper_theme'] if 'thememapper_theme' in settings else '')
     parser.set('diazo','ip',settings['diazo_ip'])
     parser.set('diazo','port',settings['diazo_port'])
-    with open(os.path.join(module_path, path), 'wb') as settings_file:
+    with open(os.path.join(os.path.dirname(__file__), path), 'wb') as settings_file:
         parser.write(settings_file)
-    
 
 if __name__ == "__main__":
     main()
