@@ -34,9 +34,14 @@ def main():
     options = p.parse_args()[0]
     port = options.port
     ip = options.ip
-    
     #start thememapper
-    HTTPServer(WSGIContainer(app)).listen(port)
+    if mapper.diazo_run:
+        HTTPServer(WSGIContainer(app)).listen(port)
+        try: 
+            from thememapper.diazo import server
+            HTTPServer(server.get_application()).listen(mapper.diazo_port)
+        except ImportError: 
+            print "You will need to install thememapper.diazo before being able to use this function." 
     ioloop = IOLoop.instance()
     autoreload.start(ioloop)
     ioloop.start()
@@ -116,6 +121,7 @@ def get_settings(config=False,path='settings.properties'):
             'thememapper_theme':parser.get('thememapper','theme'),
             'diazo_ip':parser.get('diazo','ip'),
             'diazo_port':parser.get('diazo','port'),
+            'diazo_run':parser.get('diazo','run'),
         }
     else:
         settings = False
@@ -131,6 +137,7 @@ def save_settings(settings,path='settings.properties'):
     parser.set('thememapper','theme',settings['thememapper_theme'] if 'thememapper_theme' in settings else '')
     parser.set('diazo','ip',settings['diazo_ip'])
     parser.set('diazo','port',settings['diazo_port'])
+    parser.set('diazo','run',settings['diazo_run'])
     with open(os.path.join(os.path.dirname(__file__), path), 'wb') as settings_file:
         parser.write(settings_file)
 

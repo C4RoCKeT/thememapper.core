@@ -16,6 +16,7 @@ class Mapper:
         cls.themed_url = cls.set_themed_url(cls.content_url)
         cls.ip = settings['thememapper_ip']
         cls.port = settings['thememapper_port']
+        cls.diazo_run = settings['diazo_run']
         
     def set_themed_url(cls,content_url):
         from urlparse import urlparse,urljoin

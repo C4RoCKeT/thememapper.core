@@ -35,6 +35,8 @@
     {% endif %}
     {% endfor %}
     <h2>Diazo Settings</h2>
+    <label>Run Diazo server</label>
+    <input type="checkbox" name="diazo_run" value="1" {% if settings['diazo_run'] %}checked="checked"{% endif %} />
     <label>Address</label>
     <input type="text" name="diazo_ip" value="{{ settings['diazo_ip'] }}" placeholder="127.0.0.1" style="margin-right:5px;" /><input type="text" name="diazo_port" value="{{ settings['diazo_port'] }}" placeholder="5000" />
     <br/>
