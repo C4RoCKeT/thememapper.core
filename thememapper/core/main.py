@@ -39,6 +39,7 @@ def start_thememapper():
     if mapper.diazo_run:
         try: 
             from thememapper.diazo import server
+            server.init(mapper)
             HTTPServer(server.get_diazo_server()).listen(mapper.diazo_port)
         except ImportError: 
             print "You will need to install thememapper.diazo before being able to use this function." 
@@ -137,8 +138,7 @@ def save_settings(settings,path='settings.properties'):
     parser.set('thememapper','theme',settings['thememapper_theme'] if 'thememapper_theme' in settings else '')
     parser.set('diazo','ip',settings['diazo_ip'])
     parser.set('diazo','port',settings['diazo_port'])
-    print settings['diazo_run']
-    parser.set('diazo','run',settings['diazo_run'] if 'diazo_run' in settings else '0')
+    parser.set('diazo','run',settings['diazo_run'] if 'diazo_run' in settings else '')
     with open(os.path.join(os.path.dirname(__file__), path), 'wb') as settings_file:
         parser.write(settings_file)
 
