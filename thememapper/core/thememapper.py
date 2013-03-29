@@ -137,7 +137,7 @@ def save_settings(settings,path='settings.properties'):
     parser.set('thememapper','theme',settings['thememapper_theme'] if 'thememapper_theme' in settings else '')
     parser.set('diazo','ip',settings['diazo_ip'])
     parser.set('diazo','port',settings['diazo_port'])
-    parser.set('diazo','run',settings['diazo_run'])
+    parser.set('diazo','run',settings['diazo_run'] if 'diazo_run' in settings else 0)
     with open(os.path.join(os.path.dirname(__file__), path), 'wb') as settings_file:
         parser.write(settings_file)
 
