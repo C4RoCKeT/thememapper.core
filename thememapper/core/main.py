@@ -30,7 +30,7 @@ def start_thememapper():
     # Adds the ability to set config file and port through commandline
     p = optparse.OptionParser()
     p.add_option('--port', '-p', default=mapper.port,help='port thememapper should run at')
-    p.add_option('--diazo', '-d', default=True,action="store_false",dest="verbose",help='force diazo server to run')
+    p.add_option('--diazo', '-d', default=False,action="store_true",dest="diazo",help='force diazo server to run')
     p.add_option('--diazo_port', '-f', default=mapper.diazo_port,help='port diazo should run at')
     options = p.parse_args()[0]
     mapper.port = options.port
