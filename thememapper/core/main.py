@@ -29,24 +29,30 @@ def start_thememapper():
     nav = Navigation()
     # Adds the ability to set config file and port through commandline
     p = optparse.OptionParser()
-    p.add_option('--ip', '-i', default=mapper.ip)
-    p.add_option('--port', '-p', default=mapper.port)
+    p.add_option('--port', '-p', default=mapper.port,help='port thememapper should run at')
+    p.add_option('--diazo', '-d', default=True,action="store_false",dest="verbose",help='force diazo server to run')
+    p.add_option('--diazo_port', '-f', default=mapper.diazo_port,help='port diazo should run at')
     options = p.parse_args()[0]
-    port = options.port
-    ip = options.ip
+    mapper.port = options.port
+    mapper.diazo_port = options.diazo_port
     #start thememapper
-    HTTPServer(WSGIContainer(app)).listen(port)
-    if mapper.diazo_run:
+    print "Starting thememapper on http://0.0.0.0:" + mapper.port
+    HTTPServer(WSGIContainer(app)).listen(mapper.port)
+    if options.diazo or mapper.diazo_run:
         try: 
             from thememapper.diazo import server
-            server.init(mapper)
-            HTTPServer(server.get_diazo_server()).listen(mapper.diazo_port)
+            print "Starting diazo on http://0.0.0.0:" + mapper.diazo_port
+            HTTPServer(server.get_application(mapper)).listen(mapper.diazo_port)
         except ImportError: 
             print "You will need to install thememapper.diazo before being able to use this function." 
     ioloop = IOLoop.instance()
-    autoreload.watch('settings.properties')
+    autoreload.watch(os.path.join(os.path.dirname(__file__), 'settings.properties'))
+    autoreload.add_reload_hook(reload)
     autoreload.start(ioloop)
     ioloop.start()
+    
+def reload():
+    print "===== auto-reloading ====="
 
 @app.route("/")
 def index():
@@ -116,12 +122,10 @@ def get_settings(config=False,path='settings.properties'):
         if config:
             return parser
         settings = {
-            'thememapper_ip':parser.get('thememapper','ip'),
             'thememapper_port':parser.get('thememapper','port'),
             'thememapper_content_url':parser.get('thememapper','content_url'),
             'thememapper_themes_directory':parser.get('thememapper','themes_directory'),
             'thememapper_theme':parser.get('thememapper','theme'),
-            'diazo_ip':parser.get('diazo','ip'),
             'diazo_port':parser.get('diazo','port'),
             'diazo_run':parser.get('diazo','run'),
         }
@@ -132,12 +136,10 @@ def get_settings(config=False,path='settings.properties'):
 def save_settings(settings,path='settings.properties'):
     global mapper
     parser = get_settings(True)
-    parser.set('thememapper','ip',settings['thememapper_ip'])
     parser.set('thememapper','port',settings['thememapper_port'])
     parser.set('thememapper','content_url',settings['thememapper_content_url'])
     parser.set('thememapper','themes_directory',settings['thememapper_themes_directory'])
     parser.set('thememapper','theme',settings['thememapper_theme'] if 'thememapper_theme' in settings else '')
-    parser.set('diazo','ip',settings['diazo_ip'])
     parser.set('diazo','port',settings['diazo_port'])
     parser.set('diazo','run',settings['diazo_run'] if 'diazo_run' in settings else '')
     with open(os.path.join(os.path.dirname(__file__), path), 'wb') as settings_file:
