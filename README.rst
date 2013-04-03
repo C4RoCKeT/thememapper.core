@@ -26,5 +26,5 @@ thememapper.diazo
 =====
 
 If you want to test your mapped theme and you don't have your own Diazo instance running you can install thememapper.diazo.
-thememapper.diazo Is like thememapper.core a stand-alone application and does not require thememapper.core to run. For more information please refer to the
-readme of thememapper.diazo.
+thememapper.diazo Is, like thememapper.core, a stand-alone application and does not require thememapper.core to run. For more information please refer to the
+readme of thememapper.diazo. https://github.com/C4RoCKeT/thememapper.diazo
