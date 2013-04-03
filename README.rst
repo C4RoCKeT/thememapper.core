@@ -25,11 +25,11 @@ After the installation you will be able to run thememapper.core through the comm
 
     $ thememapper
 
-Thememapper.core normally listends to port 5000. You can force it to listen on another port by running::
+Thememapper.core normally listens to port 5000. You can force it to listen on another port by running::
     
     $ thememapper -p <port>
     
-For more commands just run::
+For more options just run::
 
     $ thememapper --help
     
