@@ -8,10 +8,6 @@ It is still a work in progress. No file browser, no support for external webpage
 Installation
 =====
 
-I presume there is already a Diazo instance running. If not, go to http://docs.diazo.org/en/latest/quickstart.html for a quickstart.
-
-Good, when you have a Diazo server running you are ready to proceed to the next step.
-
 To install of GitHub:: 
 
     $ pip install -e git+git://github.com/C4RoCKeT/thememapper.core.git#egg=thememapper.core
@@ -25,9 +21,10 @@ To install of Pypi::
 And to run thememapper.core:: 
 
     $ thememapper
-
-ThemeMapper requirements
+    
+thememapper.diazo
 =====
 
-There aren't any real requirements. You can run ThemeMapper as a standalone application. Though you might find it useful to
-run a Diazo instance and specify the Diazo address in the settings. That way you can preview your mappings.
+If you want to test your mapped theme and you don't have your own Diazo instance running you can install thememapper.diazo.
+thememapper.diazo Is like thememapper.core a stand-alone application and does not require thememapper.core to run. For more information please refer to the
+readme of thememapper.diazo.
