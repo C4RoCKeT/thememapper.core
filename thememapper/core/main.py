@@ -38,7 +38,7 @@ def start_thememapper():
     #start thememapper
     print "Starting thememapper on http://0.0.0.0:" + mapper.port
     HTTPServer(WSGIContainer(app)).listen(mapper.port)
-    if options.diazo or mapper.diazo_run:
+    if options.diazo or mapper.diazo_run == 'True':
         try: 
             from thememapper.diazo import server
             print "Starting diazo on http://0.0.0.0:" + mapper.diazo_port
@@ -141,7 +141,7 @@ def save_settings(settings,path='settings.properties'):
     parser.set('thememapper','themes_directory',settings['thememapper_themes_directory'])
     parser.set('thememapper','theme',settings['thememapper_theme'] if 'thememapper_theme' in settings else '')
     parser.set('diazo','port',settings['diazo_port'])
-    parser.set('diazo','run',settings['diazo_run'] if 'diazo_run' in settings else '')
+    parser.set('diazo','run',settings['diazo_run'] if 'diazo_run' in settings else 'False')
     with open(os.path.join(os.path.dirname(__file__), path), 'wb') as settings_file:
         parser.write(settings_file)
 

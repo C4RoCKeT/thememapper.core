@@ -36,7 +36,7 @@
     {% endfor %}
     <h2>Diazo Settings</h2>
     <label>Run Diazo server</label>
-    <input type="checkbox" name="diazo_run" value="1" {% if settings['diazo_run'] %}checked="checked"{% endif %} />
+    <input type="checkbox" name="diazo_run" value="True" {% if settings['diazo_run'] == 'True' %}checked="checked"{% endif %} />
     <label>Port</label>
     <input type="text" name="diazo_port" value="{{ settings['diazo_port'] }}" placeholder="5000" />
     <br/>
