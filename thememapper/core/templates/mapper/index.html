@@ -50,7 +50,7 @@
                 <label for="checkbox_content_children">Apply to content node children</label>
             </div>
             <hr/>
-            <textarea id="rule_preview"></textarea>
+            <textarea readonly="readonly" id="rule_preview"></textarea>
             <div style="text-align:right">
                 <button type="button" class="button_cancel">Cancel</button>
                 <button type="button" class="button_ok">Generate</button>
@@ -83,12 +83,17 @@
     </div>
     <div id="content-iframe-wrap">
         <div class="btn-toolbar iframe-menu">
+            <div class="pull-left btn-group">
+                <a class="btn btn-mini" id="view-result" href="{{ mapper.themed_url }}" target="_blank" title="View result"><i class="icon-eye-open"></i> View result</a>
+                <a class="btn btn-mini" id="generate-rule" href="Javascript:void(0);" disabled="disabled" title="Generate rule"><i class="icon-fire"></i> Generate rule</a>
+            </div>
             <div class="btn-group">
                 <a class="btn btn-mini" id="highlighter" href="Javascript:void(0);" data-toggle="button" title="Toggle highlighter" data-iframe="content"><i class="icon-hand-up"></i></a>
                 <a class="btn btn-mini parent" href="Javascript:void(0);" title="Select parent" disabled="disabled" data-iframe="content"><i class="icon-arrow-up"></i></a>
                 <a class="btn btn-mini dropdown-toggle fullscreen" href="Javascript:void(0);" title="Maximize" data-iframe="content"><i class="icon-resize-full"></i></a>
                 <a class="btn btn-mini windowed" href="Javascript:void(0);" title="Minimize" data-iframe="content" style="display:none;"><i class="icon-resize-small"></i></a>
             </div>
+            <div class="clearfix"></div>
         </div>
         <iframe id="content-iframe" class="iframe" src=""></iframe>
         <div class="selector-wrap">

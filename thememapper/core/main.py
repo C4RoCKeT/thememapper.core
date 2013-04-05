@@ -71,12 +71,13 @@ def mapper(name=None):
         if request.method == 'POST':
             mapper.save_rules(request.form['rules'])
         # append the navigation with extra items
-        extra_items = [
-            {'text': 'Generate rule',       'slug':'',  'url':'Javascript:void(0);',    'class':'extra theme-mapper-generate','target':'_self'},
-            {'text': 'View themed website', 'slug':'',  'url':mapper.themed_url,               'class':'extra',                     'target':'_blank'}
-        ]
-        return render_template('mapper/index.html',nav_items=nav.get_items('theme_mapper',extra_items),mapper=mapper)
-    return render_template('mapper/' + name + '.html',nav_items=nav.get_items('theme_mapper'))
+        #extra_items = [
+        #    {'text': 'Generate rule',       'slug':'',  'url':'Javascript:void(0);',    'class':'extra theme-mapper-generate','target':'_self'},
+        #    {'text': 'View themed website', 'slug':'',  'url':mapper.themed_url,               'class':'extra',                     'target':'_blank'}
+        #]
+        #return render_template('mapper/index.html',nav_items=nav.get_items('mapper',extra_items),mapper=mapper)
+        return render_template('mapper/index.html',nav_items=nav.get_items('mapper'),mapper=mapper)
+    return render_template('mapper/' + name + '.html',nav_items=nav.get_items('mapper'))
 
 @app.route("/settings/", methods=["GET", "POST"])
 @app.route("/settings/<name>/", methods=["GET", "POST"])
