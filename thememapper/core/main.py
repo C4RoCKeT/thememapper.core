@@ -18,6 +18,7 @@ class RegexConverter(BaseConverter):
 
 app = Flask(__name__)
 app.debug = True
+app.threaded = True
 
 app.url_map.converters['regex'] = RegexConverter
 
@@ -70,12 +71,6 @@ def mapper(name=None):
     if name is None:
         if request.method == 'POST':
             mapper.save_rules(request.form['rules'])
-        # append the navigation with extra items
-        #extra_items = [
-        #    {'text': 'Generate rule',       'slug':'',  'url':'Javascript:void(0);',    'class':'extra theme-mapper-generate','target':'_self'},
-        #    {'text': 'View themed website', 'slug':'',  'url':mapper.themed_url,               'class':'extra',                     'target':'_blank'}
-        #]
-        #return render_template('mapper/index.html',nav_items=nav.get_items('mapper',extra_items),mapper=mapper)
         return render_template('mapper/index.html',nav_items=nav.get_items('mapper'),mapper=mapper)
     return render_template('mapper/' + name + '.html',nav_items=nav.get_items('mapper'))
 
@@ -86,7 +81,8 @@ def settings(name=None):
         if request.method == 'POST':
             save_settings(request.form)
             mapper.reload(get_settings())
-        return render_template('settings/index.html',nav_items=nav.get_items('settings'),settings=get_settings(),mapper=mapper)
+        else:
+            return render_template('settings/index.html',nav_items=nav.get_items('settings'),settings=get_settings(),mapper=mapper)
     return render_template('mapper/' + name + '.html',nav_items=nav.get_items('settings'))
 
 
@@ -112,6 +108,13 @@ def iframe(name=None,path='index.html'):
             r = requests.get(path)
             return render_template('mapper/iframe-safe.html',url=path,content=r.text)
     abort(404)
+
+@app.route("/mapper/iframe/<name>/")    
+@app.route('/mapper/result/<regex("(.*)"):path>')
+def result(path=''):
+    if path == '' or path is None:
+        path = mapper.content_url
+    return render_template('mapper/result-safe.html',url=mapper.get_themed_url(path))
     
 def get_settings(config=False,path='settings.properties'):
     from ConfigParser import SafeConfigParser

@@ -2,8 +2,7 @@ import os
 
 class Mapper:
     def __init__(self,settings):
-        self.reload(settings)
-        
+        self.reload(settings)     
     
     def reload(cls,settings):
         cls.theme = settings['thememapper_theme']
@@ -11,14 +10,19 @@ class Mapper:
         cls.theme_path = os.path.join(cls.themes_dir,cls.theme)
         cls.rules_path = os.path.join(cls.theme_path,'rules.xml')
         cls.content_url = settings['thememapper_content_url']
+        cls.diazo_addr = '127.0.0.1'
         cls.diazo_port = settings['diazo_port']
-        cls.themed_url = cls.set_themed_url(cls.content_url)
         cls.port = settings['thememapper_port']
+        cls.themed_url = cls.set_themed_url(cls.content_url)
         cls.diazo_run = settings['diazo_run']
         
     def set_themed_url(cls,content_url):
         from urlparse import urlparse,urljoin
-        return urljoin('http://127.0.0.1:' + cls.diazo_port,urlparse(content_url).path)
+        return 'http://localhost:' + cls.port + '/mapper/result/' + cls.get_themed_url(content_url)
+
+    def get_themed_url(cls,url):
+        from urlparse import urlparse,urljoin
+        return urljoin('http://' + cls.diazo_addr + ':' + cls.diazo_port,urlparse(url).path)
     
     def save_rules(self,rules):
         try:

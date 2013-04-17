@@ -9,6 +9,7 @@ $(function (){
     var class_selected = 'theme-mapper-selected';
     var class_hover = 'theme-mapper-hover';
     var highLighter = true;
+    var childWindow = null;
     load_theme_iframe($('#template-select').val());
     $('#theme-iframe').load(function() {
         onIframeLoad($(this));
@@ -102,7 +103,8 @@ $(function (){
         if(rule_type == 'drop_content') {
             $('#theme-applyto').hide();
             $('#content-applyto').show();
-        }else if(rule_type == 'drop_theme') {
+        }
+        else if(rule_type == 'drop_theme') {
             $('#theme-applyto').show();
             $('#content-applyto').hide();
         } else {
@@ -132,10 +134,13 @@ $(function (){
     function load_content_iframe(url) {
         if(url != undefined) {
             url = "/" + url;
-        } else {
+        }
+        else {
             url = ""
         }
+        $('#view-result').attr('data-url', "/mapper/result"+url);
         $('#content-iframe').attr('src', "/mapper/iframe/content"+url);
+        changeChildWindowLocation("/mapper/result"+url);
         return false;
     }
 
@@ -432,9 +437,48 @@ $(function (){
 
     }
     
+    $('#save-rules').click(function() {
+        console.log('trying to save rules...');
+        myCodeMirror.save();
+        saveRules($('#rules-form').serialize());
+    });
+    
+    function saveRules(data) {
+        $.post($('#rules-form').attr('action'),data,function(){
+            if(childWindow != undefined) {
+                refreshChildWindow();
+            }
+        });
+    }
+    
     var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("rules"), {
         mode:  "xml",
         lineNumbers: true,
         alignCDATA: true
     });
+
+    $('#view-result').click(function (event) {
+        event.preventDefault();
+    	openChildWindow($(this).attr('data-url'));
+        return false;
+    });
+
+    function openChildWindow(url) {
+        childWindow = window.open(url);
+    }
+      
+    function refreshChildWindow() {
+        if (childWindow)
+            childWindow.location.reload();
+    }
+
+    function unloadChildWindow() {
+        childWindow = null;
+    }
+
+    function changeChildWindowLocation(url) {
+        if (childWindow) {
+            childWindow.location = 'http://' + childWindow.location.host + url;
+        }
+    }
 });
