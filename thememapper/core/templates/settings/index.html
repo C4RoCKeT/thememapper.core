@@ -12,7 +12,12 @@
             $('#theme-' + $(this).val()).show();
         });
     });
-</script>
+</script>\
+<style>
+    input[type="text"] {
+        width: 626px;
+    }
+</style>
 {% endblock %}
 {% block content %}
 <form method="post" action="">
@@ -35,8 +40,10 @@
     {% endif %}
     {% endfor %}
     <h2>Diazo Settings</h2>
-    <label>Run Diazo server</label>
-    <input type="checkbox" name="diazo_run" value="True" {% if settings['diazo_run'] == 'True' %}checked="checked"{% endif %} />
+    <label style="display:inline-block">Use local thememapper.diazo</label>&nbsp;&nbsp;
+    <input style="margin:0;" type="checkbox" name="diazo_run" value="True" {% if settings['diazo_run'] == 'True' %}checked="checked"{% endif %} />
+    <label>Ip</label>
+    <input type="text" name="diazo_ip" value="{{ settings['diazo_ip'] }}" placeholder="127.0.0.1" />       
     <label>Port</label>
     <input type="text" name="diazo_port" value="{{ settings['diazo_port'] }}" placeholder="5000" />
     <br/>

@@ -10,7 +10,7 @@ class Mapper:
         cls.theme_path = os.path.join(cls.themes_dir,cls.theme)
         cls.rules_path = os.path.join(cls.theme_path,'rules.xml')
         cls.content_url = settings['thememapper_content_url']
-        cls.diazo_addr = '127.0.0.1'
+        cls.diazo_addr = settings['diazo_ip']
         cls.diazo_port = settings['diazo_port']
         cls.port = settings['thememapper_port']
         cls.themed_url = cls.set_themed_url(cls.content_url)

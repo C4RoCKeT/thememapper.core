@@ -1,6 +1,6 @@
 from flask import Flask,request
 from flask import render_template,Response
-from flask import abort
+from flask import abort,redirect
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
@@ -17,7 +17,7 @@ class RegexConverter(BaseConverter):
         self.regex = items[0]
 
 app = Flask(__name__)
-app.debug = True
+#app.debug = True
 app.threaded = True
 
 app.url_map.converters['regex'] = RegexConverter
@@ -78,9 +78,11 @@ def settings(name=None):
     if name is None:
         if request.method == 'POST':
             save_settings(request.form)
+            old_port = mapper.port
             mapper.reload(get_settings())
-        else:
-            return render_template('settings/index.html',nav_items=nav.get_items('settings'),settings=get_settings(),mapper=mapper)
+            if old_port != mapper.port:
+                return redirect('http://localhost:' + mapper.port + '/settings/')
+        return render_template('settings/index.html',nav_items=nav.get_items('settings'),settings=get_settings(),mapper=mapper)
     return render_template('mapper/' + name + '.html',nav_items=nav.get_items('settings'))
 
 
@@ -145,6 +147,7 @@ def get_settings(config=False,path='settings.properties'):
             'thememapper_content_url':parser.get('thememapper','content_url'),
             'thememapper_themes_directory':parser.get('thememapper','themes_directory'),
             'thememapper_theme':parser.get('thememapper','theme'),
+            'diazo_ip':parser.get('diazo','ip'),
             'diazo_port':parser.get('diazo','port'),
             'diazo_run':parser.get('diazo','run'),
         }
@@ -155,10 +158,11 @@ def get_settings(config=False,path='settings.properties'):
 def save_settings(settings,path='settings.properties'):
     global mapper
     parser = get_settings(True)
-    parser.set('thememapper','port',settings['thememapper_port'])
+    parser.set('thememapper','port',settings['thememapper_port'] if settings['thememapper_port'] != '' else '5001')
     parser.set('thememapper','content_url',settings['thememapper_content_url'])
     parser.set('thememapper','themes_directory',settings['thememapper_themes_directory'])
     parser.set('thememapper','theme',settings['thememapper_theme'] if 'thememapper_theme' in settings else '')
+    parser.set('diazo','ip',settings['diazo_ip'] if 'diazo_run' not in settings else 'localhost')
     parser.set('diazo','port',settings['diazo_port'])
     parser.set('diazo','run',settings['diazo_run'] if 'diazo_run' in settings else 'False')
     with open(os.path.join(os.path.dirname(__file__), path), 'wb') as settings_file:
