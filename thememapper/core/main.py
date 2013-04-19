@@ -69,8 +69,6 @@ def index():
 @app.route("/mapper/<name>/", methods=["GET", "POST"])
 def mapper(name=None):
     if name is None:
-        if request.method == 'POST':
-            mapper.save_rules(request.form['rules'])
         return render_template('mapper/index.html',nav_items=nav.get_items('mapper'),mapper=mapper)
     return render_template('mapper/' + name + '.html',nav_items=nav.get_items('mapper'))
 
@@ -108,6 +106,23 @@ def iframe(name=None,path='index.html'):
             r = requests.get(path)
             return render_template('mapper/iframe-safe.html',url=path,content=r.text)
     abort(404)
+
+@app.route("/ajax/<type>/", methods=["POST"])
+@app.route("/ajax/<type>/<action>", methods=["POST"])
+def ajax(type=None,action=None):
+    print action
+    if type is not None:
+        if type == 'rules':
+            if request.method == 'POST':
+                if action == 'save':
+                    print request.form['path']
+                    if mapper.save_rules(request.form['rules'],request.form['path']):
+                        return 'Rules saved', 200
+                    else:
+                        abort(404)
+                if action is None or action == 'load':
+                    return Response(mapper.get_rules(request.form['path']),mimetype='application/xml')
+    abort(204)
 
 @app.route("/mapper/iframe/<name>/")    
 @app.route('/mapper/result/<regex("(.*)"):path>')

@@ -84,7 +84,7 @@
     <div id="content-iframe-wrap">
         <div class="btn-toolbar iframe-menu">
             <div class="pull-left btn-group">
-                <a class="btn btn-mini" id="view-result" href="{{ mapper.themed_url }}" target="_blank" title="View result"><i class="icon-eye-open"></i> View result</a>
+                <a class="btn btn-mini" id="view-result" data-url="{{ mapper.themed_url }}" href="Javascript:void(0);" target="_blank" title="View result"><i class="icon-eye-open"></i> View result</a>
                 <a class="btn btn-mini" id="generate-rule" href="Javascript:void(0);" disabled="disabled" title="Generate rule"><i class="icon-fire"></i> Generate rule</a>
             </div>
             <div class="btn-group">
@@ -93,7 +93,6 @@
                 <a class="btn btn-mini dropdown-toggle fullscreen" href="Javascript:void(0);" title="Maximize" data-iframe="content"><i class="icon-resize-full"></i></a>
                 <a class="btn btn-mini windowed" href="Javascript:void(0);" title="Minimize" data-iframe="content" style="display:none;"><i class="icon-resize-small"></i></a>
             </div>
-            <div class="clearfix"></div>
         </div>
         <iframe id="content-iframe" class="iframe" src=""></iframe>
         <div class="selector-wrap">
@@ -105,9 +104,21 @@
     <div class="cf"></div>
 </div>
 <div id="code-wrap">
-    <form id="rules-form" style="border:1px solid #ccc;" action="" method="post">
-        <textarea id="rules" name="rules" style="width:100%;min-height:300px;">{{ mapper.get_rules() }}</textarea>
-        <button id="save-rules" class="btn btn-primary" style="margin-top:5px;float:right;" type="button" />Save rules</button>
+    <form id="rules-form" action="/ajax/rules/save/" method="post">
+        <div class="btn-toolbar" style="text-align:right;">
+            <div class="btn-group">
+                <a class="btn btn-mini" id="rules-reload" href="Javascript:void(0);" title="Reload rules"><i class="icon-refresh"></i></a>
+            </div>
+            <select id="rules-select" name="path" style="margin-bottom:0;float:left;">
+                {% for rule_file in mapper.get_rule_files() %}
+                <option value="{{ rule_file['path'] }}" {% if rule_file['name'] == 'rules.xml' %}selected="selected"{% endif %}>{{ rule_file['name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div style="border:1px solid #ccc;">
+            <textarea id="rules" name="rules" style="width:100%;min-height:300px;">{{ mapper.get_rules() }}</textarea>
+        </div>
+        <button id="rules-save" class="btn btn-primary" style="margin-top:5px;float:right;" type="button" />Save rules</button>
         <div class="clear"></div>
     </form>
 </div>

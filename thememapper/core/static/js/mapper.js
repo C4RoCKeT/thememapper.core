@@ -90,6 +90,7 @@ $(function (){
         }
         $('input:radio[name=rule_type]:visible:first').attr('checked',true);
         $('#rule_generate_box,.mask').show();
+        $('#mask_content').css('marginTop',($('#mask').height() - $('#mask_content').height())/2 + 'px');
         previewRule();
     });
     $('#mask').click(function() {
@@ -437,20 +438,6 @@ $(function (){
 
     }
     
-    $('#save-rules').click(function() {
-        console.log('trying to save rules...');
-        myCodeMirror.save();
-        saveRules($('#rules-form').serialize());
-    });
-    
-    function saveRules(data) {
-        $.post($('#rules-form').attr('action'),data,function(){
-            if(childWindow != undefined) {
-                refreshChildWindow();
-            }
-        });
-    }
-    
     var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("rules"), {
         mode:  "xml",
         lineNumbers: true,
@@ -459,7 +446,7 @@ $(function (){
 
     $('#view-result').click(function (event) {
         event.preventDefault();
-    	openChildWindow($(this).attr('data-url'));
+        openChildWindow($(this).attr('data-url'));
         return false;
     });
 
@@ -481,4 +468,35 @@ $(function (){
             childWindow.location = 'http://' + childWindow.location.host + url;
         }
     }
+    
+    function loadRules(path) {
+        $.post('/ajax/rules/load',{
+            path:path
+        },function(data) {
+            myCodeMirror.setValue(data);
+        },'text');
+    }
+    
+    function saveRules(data) {
+        $.post('/ajax/rules/save',data,function(){
+            if(childWindow != undefined) {
+                refreshChildWindow();
+            }
+        });
+    }
+    
+    $('#rules-reload').click(function(){
+        loadRules($('#rules-select').val());
+    });
+    
+    $('#rules-select').change(function(){
+        loadRules($('#rules-select').val());
+    });
+    
+    $('#rules-save').click(function() {
+        myCodeMirror.save();
+        saveRules($('#rules-form').serialize());
+    });
+    
+    
 });

@@ -24,20 +24,50 @@ class Mapper:
         from urlparse import urlparse,urljoin
         return urljoin('http://' + cls.diazo_addr + ':' + cls.diazo_port,urlparse(url).path)
     
-    def save_rules(self,rules):
+    def save_rules(self,rules,path=None):
         try:
-            f = open(self.rules_path, "w") # This will create a new file or **overwrite an existing file**.
+            if path is None and os.path.isfile(self.rules_path):
+                f = open(self.rules_path, "w") # This will create a new file or **overwrite an existing file**.
+            elif os.path.isfile(path):
+                f = open(path, "w") # This will create a new file or **overwrite an existing file**.
+            else:
+                return False
             try:
                 f.write(rules) # Write the xml to the file
             finally:
                 f.close()
+                return True
         except IOError:
-            pass
+            return False
 
-    def get_rules(self):
-        if os.path.isfile(self.rules_path):
-            return open(self.rules_path).read()
+    def get_rules(self, path=None):
+        if path is None:
+            if os.path.isfile(self.rules_path):
+                return open(self.rules_path).read()
+        else:
+            if os.path.isfile(path):
+                return open(path).read()        
         return False
+    
+    def get_rule_files(self,root_dir=None):
+        if root_dir is None:
+            root_dir = self.theme_path
+        rule_files = []
+        for dirname, dirnames, filenames in os.walk(root_dir):
+            # Advanced usage:
+            # editing the 'dirnames' list will stop os.walk() from recursing into there.
+            if '.git' in dirnames:
+                # don't go into any .git directories.
+                dirnames.remove('.git')
+            if filenames:
+                for filename in filenames:
+                    extension = os.path.splitext(filename)[1]
+                    if extension == '.xml':
+                        rule_files.append({
+                            'path':os.path.join(dirname,filename),
+                            'name':filename
+                        })
+        return rule_files
 
     def get_file_tree(self,root_dir=None):
         if root_dir is None:
@@ -71,8 +101,8 @@ class Mapper:
                     extension = os.path.splitext(filename)[1]
                     if extension == '.html' or extension == '.htm':
                         templates.append({
-                        'path':os.path.join(dirname,filename),
-                        'name':filename
+                            'path':os.path.join(dirname,filename),
+                            'name':filename
                         })
         return templates
     

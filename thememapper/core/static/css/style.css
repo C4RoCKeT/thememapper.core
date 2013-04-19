@@ -1,7 +1,13 @@
-body { padding:10px;font-family:arial; }
+body { padding:45px 0 10px;font-family:arial;}
 a { text-decoration: none; }
 a:visited { color:inherit; }
 clear { clear:both; }
+
+@media (min-width: 1200px) {
+    .container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
+        width:100% !important;box-sizing:border-box;padding: 0 55px;
+    }
+}
 /**
  * For modern browsers
  * 1. The space content is one way to avoid an Opera bug when the
@@ -27,8 +33,8 @@ textarea { box-sizing:border-box;-moz-box-sizing:border-box;border-color:#ccc; }
 iframe.iframe { height:450px;width:100%;display: block;border: 1px solid #ccc;margin-bottom:0px;box-sizing:border-box;-moz-box-sizing:border-box; }
 .CodeMirror { border: 1px solid #eee !important;height: auto !important; }
 .CodeMirror-scroll { overflow-y: hidden !important; overflow-x: auto !important; }
-#mask { display:none;height:100%;width:100%;position: fixed;top:0;left:0;z-index: 999; background-color: rgba(0,0,0,0.5); }
-#mask_content { background-color:#fff;margin-top:200px;box-shadow: 5px 5px rgba(0,0,0,0.5);margin-left:auto;margin-right:auto;width:500px;box-sizing:border-box;-moz-box-sizing:border-box;border-radius:10px;padding:15px; }
+#mask { display:none;height:100%;width:100%;position: fixed;top:0;left:0;z-index: 999; background-color: rgba(0,0,0,0.5);box-sizing: border-box;-moz-box-sizing:border-box;padding:10px; }
+#mask_content { background-color:#fff;box-shadow: 5px 5px rgba(0,0,0,0.5);margin-left:auto;margin-right:auto;width:500px;max-width:100%;box-sizing:border-box;-moz-box-sizing:border-box;border-radius:10px;padding:15px; }
 #mask_content .mask_content_block h1 { margin:0 auto; }
 #rule_preview { width:100% !important; resize: none;font-size:12px; }
 #rule_generate_box { display:none; }
