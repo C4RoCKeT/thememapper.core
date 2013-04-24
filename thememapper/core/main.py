@@ -112,7 +112,6 @@ def iframe(name=None,path='index.html'):
 @app.route("/ajax/<type>/", methods=["POST"])
 @app.route("/ajax/<type>/<action>", methods=["POST"])
 def ajax(type=None,action=None):
-    print action
     if type is not None:
         if type == 'rules':
             if request.method == 'POST':
@@ -170,3 +169,4 @@ def save_settings(settings,path='settings.properties'):
 
 if __name__ == "__main__":
     start_thememapper()
+

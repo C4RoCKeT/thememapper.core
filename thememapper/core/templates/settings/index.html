@@ -12,7 +12,7 @@
             $('#theme-' + $(this).val()).show();
         });
     });
-</script>\
+</script>
 <style>
     input[type="text"] {
         width: 626px;
@@ -36,7 +36,7 @@
     </select><br/>
     {% for theme in mapper.get_themes() %}
     {% if 'preview' in theme %}
-        <img class="theme-images" id="theme-{{ theme['name'] }}" src="/mapper/iframe/theme/{{ theme['preview'] }}" />
+        <img class="theme-images" id="theme-{{ theme['name'] }}" src="/mapper/iframe/theme{{ theme['preview'] }}" />
     {% endif %}
     {% endfor %}
     <h2>Diazo Settings</h2>

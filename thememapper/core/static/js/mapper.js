@@ -10,6 +10,21 @@ $(function (){
     var class_hover = 'theme-mapper-hover';
     var highLighter = true;
     var childWindow = null;
+    $('#loading').waiting({ 
+        className: 'waiting-circles', 
+        elements: 8, 
+        radius: 20, 
+        auto: true 
+    });
+    var loading = $('#loading');
+    var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("rules"), {
+        mode:  "xml",
+        lineNumbers: true,
+        alignCDATA: true
+    });
+    loading.css('marginTop',(loading.parent().height()-loading.height())/2);
+    loading.parent().hide();
+
     load_theme_iframe($('#template-select').val());
     $('#theme-iframe').load(function() {
         onIframeLoad($(this));
@@ -437,12 +452,6 @@ $(function (){
         }
 
     }
-    
-    var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("rules"), {
-        mode:  "xml",
-        lineNumbers: true,
-        alignCDATA: true
-    });
 
     $('#view-result').click(function (event) {
         event.preventDefault();
@@ -470,18 +479,23 @@ $(function (){
     }
     
     function loadRules(path) {
+        loading.parent().fadeIn(100);
         $.post('/ajax/rules/load',{
             path:path
         },function(data) {
             myCodeMirror.setValue(data);
+            loading.css('marginTop',(loading.parent().height()-loading.height())/2);
+            loading.parent().fadeOut(250);
         },'text');
     }
     
     function saveRules(data) {
+        loading.parent().fadeIn(100);
         $.post('/ajax/rules/save',data,function(){
             if(childWindow != undefined) {
                 refreshChildWindow();
             }
+            loading.parent().fadeOut(250);
         });
     }
     
