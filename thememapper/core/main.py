@@ -33,9 +33,11 @@ def start_thememapper():
     p.add_option('--port', '-p', default=mapper.port,help='port thememapper should run at')
     p.add_option('--diazo', '-d', default=False,action="store_true",dest="diazo",help='force diazo server to run')
     p.add_option('--diazo_port', '-f', default=mapper.diazo_port,help='port diazo should run at')
+    p.add_option('--static_path', '-s', default=mapper.static_path,help='path to static folder')
     options = p.parse_args()[0]
     mapper.port = options.port
     mapper.diazo_port = options.diazo_port
+    mapper.static_path = options.static_path
     #start thememapper
     print "Starting thememapper on http://0.0.0.0:" + mapper.port
     HTTPServer(WSGIContainer(app)).listen(mapper.port)
@@ -149,6 +151,7 @@ def get_settings(config=False,path='settings.properties'):
             'diazo_ip':parser.get('diazo','ip'),
             'diazo_port':parser.get('diazo','port'),
             'diazo_run':parser.get('diazo','run'),
+            'static_path':parser.get('diazo','static'),
         }
     else:
         settings = False
@@ -161,12 +164,12 @@ def save_settings(settings,path='settings.properties'):
     parser.set('thememapper','content_url',settings['thememapper_content_url'])
     parser.set('thememapper','themes_directory',settings['thememapper_themes_directory'])
     parser.set('thememapper','theme',settings['thememapper_theme'] if 'thememapper_theme' in settings else '')
-    parser.set('diazo','ip',settings['diazo_ip'] if 'diazo_run' not in settings else 'localhost')
+    parser.set('diazo','ip',settings['diazo_ip'] if settings['diazo_ip'] != '' else 'localhost')
     parser.set('diazo','port',settings['diazo_port'])
     parser.set('diazo','run',settings['diazo_run'] if 'diazo_run' in settings else 'False')
+    parser.set('diazo','static',settings['static_path'] if 'static_path' in settings else '')
     with open(os.path.join(os.path.dirname(__file__), path), 'wb') as settings_file:
         parser.write(settings_file)
 
 if __name__ == "__main__":
     start_thememapper()
-

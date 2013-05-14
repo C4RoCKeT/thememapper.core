@@ -46,6 +46,8 @@
     <input type="text" name="diazo_ip" value="{{ settings['diazo_ip'] }}" placeholder="127.0.0.1" />       
     <label>Port</label>
     <input type="text" name="diazo_port" value="{{ settings['diazo_port'] }}" placeholder="5000" />
+    <label>Static path | Only use if you know what your are doing. Default: empty</label>
+    <input type="text" name="static_path" value="{{ settings['static_path'] }}" placeholder="" />
     <br/>
     <button class="btn btn-primary" style="margin-top:5px;" type="submit">Save settings</button>
 </form>

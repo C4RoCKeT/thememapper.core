@@ -12,6 +12,7 @@ class Mapper:
         cls.content_url = settings['thememapper_content_url']
         cls.diazo_addr = settings['diazo_ip']
         cls.diazo_port = settings['diazo_port']
+        cls.static_path = settings['static_path'] if settings['static_path'] != "" else cls.theme_path
         cls.port = settings['thememapper_port']
         cls.themed_url = cls.set_themed_url(cls.content_url)
         cls.diazo_run = settings['diazo_run']
@@ -123,7 +124,7 @@ class Mapper:
                     if filename == 'rules.xml':
                         name = os.path.basename(dirname)
                         theme['name'] = name
-                        theme['active'] = True if name == self.theme else False
+                        theme['active'] = name == self.theme
                     if basename == 'preview':
                         theme['preview'] = os.path.join(dirname,filename)
                 if 'name' in theme:
