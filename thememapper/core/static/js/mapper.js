@@ -479,6 +479,8 @@ $(function (){
     }
     
     function loadRules(path) {
+        $('#rules-select').attr('disabled','disabled');
+        $('#rules-reload,#rules-save').addClass('disabled');
         loading.parent().fadeIn(100);
         $.post('/ajax/rules/load',{
             path:path
@@ -486,21 +488,31 @@ $(function (){
             myCodeMirror.setValue(data);
             loading.css('marginTop',(loading.parent().height()-loading.height())/2);
             loading.parent().fadeOut(250);
+            $('#rules-select').removeAttr('disabled');
+            $('#rules-reload,#rules-save').removeClass('disabled');
         },'text');
     }
     
     function saveRules(data) {
+        $('#rules-reload').addClass('disabled');
+        $('#rules-save').button('loading').addClass('disabled');
+        $('#rules-select').attr('disabled','disabled');
         loading.parent().fadeIn(100);
         $.post('/ajax/rules/save',data,function(){
             if(childWindow != undefined) {
                 refreshChildWindow();
             }
             loading.parent().fadeOut(250);
+            $('#rules-save').button('reset').removeClass('disabled');
+            $('#rules-reload').removeClass('disabled');
+            $('#rules-select').removeAttr('disabled');
         });
     }
     
     $('#rules-reload').click(function(){
-        loadRules($('#rules-select').val());
+        if(!$(this).hasClass('disabled')) {
+            loadRules($('#rules-select').val());
+        }
     });
     
     $('#rules-select').change(function(){
@@ -508,9 +520,10 @@ $(function (){
     });
     
     $('#rules-save').click(function() {
-        myCodeMirror.save();
-        saveRules($('#rules-form').serialize());
+        if(!$(this).hasClass('disabled')) {
+            myCodeMirror.save();
+            saveRules($('#rules-form').serialize());
+        }
     });
-    
     
 });
