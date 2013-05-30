@@ -1,4 +1,4 @@
-thememapper.core Copyright 2013, <YOUR NAME HERE>
+thememapper.core Copyright 2013, Brandon Tilstra
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

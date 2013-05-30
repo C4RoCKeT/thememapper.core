@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='thememapper.core',
-    version='0.5.9',
+    version='0.7.0',
     description='thememapper for Diazo',
     long_description=open('README.rst').read(),
     author='Brandon Tilstra',
@@ -20,7 +20,7 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Internet",
       ],
-    install_requires=['setuptools','Flask','requests','tornado'],
+    install_requires=['Flask','requests','tornado'],
     entry_points = {
     'console_scripts': [
                         'thememapper = thememapper.core.main:start_thememapper'
