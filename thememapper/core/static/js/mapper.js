@@ -35,7 +35,7 @@ $(function (){
     });
     $('#file-tree a').click(function() {
         var path = $(this).attr('data-path').replace(theme_path,'');
-        $('#theme-iframe').attr('src', "/mapper/iframe/theme"+path);
+        $('#theme-iframe').attr('src', "/iframe/theme"+path);
         return false;
     });
     $('#template-select').change(function() {
@@ -143,7 +143,7 @@ $(function (){
     });
     
     function load_theme_iframe(path) {
-        $('#theme-iframe').attr('src', "/mapper/iframe/theme"+path);
+        $('#theme-iframe').attr('src', "/iframe/theme"+path);
         return false;
     }
     
@@ -154,9 +154,9 @@ $(function (){
         else {
             url = ""
         }
-        $('#view-result').attr('data-url', "/mapper/result"+url);
-        $('#content-iframe').attr('src', "/mapper/iframe/content"+url);
-        changeChildWindowLocation("/mapper/result"+url);
+        $('#view-result').attr('data-url', "/editor/result"+url);
+        $('#content-iframe').attr('src', "/iframe/content"+url);
+        changeChildWindowLocation("/editor/result"+url);
         return false;
     }
 

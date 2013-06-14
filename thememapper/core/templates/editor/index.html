@@ -38,7 +38,7 @@
 {% endblock %}
 {% block javascript %}
 <script>
-    var theme_path = '{{ mapper.theme_path }}';
+    var theme_path = '{{ settings["theme_path"] }}';
 </script>
 <script src="/static/js/jquery-litelighter.js"></script>
 <script src="/static/js/jquery-waiting.js"></script>
@@ -102,7 +102,7 @@
                 <a class="btn btn-mini windowed" href="Javascript:void(0);" title="Minimize" data-iframe="theme" style="display:none;"><i class="icon-resize-small"></i></a>
             </div>
             <select name="template-select" id="template-select" style="margin-bottom:0;float:left;">
-                {% for template in mapper.get_templates() %}
+                {% for template in templates %}
                 <option value="{{ template['path'] }}">{{ template['name'] }}</option>
                 {% endfor %}
             </select>
@@ -117,7 +117,7 @@
     <div id="content-iframe-wrap">
         <div class="btn-toolbar iframe-menu">
             <div class="pull-left btn-group">
-                <a class="btn btn-mini" id="view-result" data-url="{{ mapper.themed_url }}" href="Javascript:void(0);" target="_blank" title="View result"><i class="icon-eye-open"></i> View result</a>
+                <a class="btn btn-mini" id="view-result" data-url="http://localhost:{{ settings['port'] }}/editor/result/" href="Javascript:void(0);" target="_blank" title="View result"><i class="icon-eye-open"></i> View result</a>
                 <a class="btn btn-mini" id="generate-rule" href="Javascript:void(0);" disabled="disabled" title="Generate rule"><i class="icon-fire"></i> Generate rule</a>
             </div>
             <div class="btn-group">
@@ -144,7 +144,7 @@
                 <a class="btn btn-mini" id="rules-reload" href="Javascript:void(0);" title="Reload rules"><i class="icon-refresh"></i></a>
             </div>
             <select id="rules-select" name="path" style="margin-bottom:0;float:left;">
-                {% for rule_file in mapper.get_rule_files() %}
+                {% for rule_file in rule_files %}
                 <option value="{{ rule_file['path'] }}" {% if rule_file['name'] == 'rules.xml' %}selected="selected"{% endif %}>{{ rule_file['name'] }}</option>
                 {% endfor %}
             </select>
@@ -153,13 +153,10 @@
             <div style="z-index:100;position:absolute;width:100%;height:100%;background: rgba(125,125,125,0.5);-moz-box-sizing:border-box;box-sizing: border-box;">
                 <div id="loading"></div>
             </div>
-            <textarea id="rules" name="rules" style="width:100%;min-height:300px;">{{ mapper.get_rules() }}</textarea>
+            <textarea id="rules" name="rules" style="width:100%;min-height:300px;">{{ rules }}</textarea>
         </div>
         <button id="rules-save" class="btn btn-primary" style="margin-top:5px;float:right;" type="button" data-loading-text="Saving..."/>Save rules</button>
         <div class="clear"></div>
     </form>
 </div>
-<!--<div id="file-tree-wrap">
-    {% include "mapper/file-tree.html" %}
-</div>-->
 {% endblock %}
